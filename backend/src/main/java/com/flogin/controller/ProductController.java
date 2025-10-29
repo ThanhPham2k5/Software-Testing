@@ -38,6 +38,16 @@ public class ProductController {
         return ResponseEntity.ok(service.updateProduct(id, dto));
     }
 
+//    @PutMapping("/img/{id}")
+//    public ResponseEntity<ProductDTO> updateImg(
+//            @PathVariable long id,
+//            @RequestBody Map<String, String> body
+//    ) {
+//        String base64 = body.get("base64");
+//        return ResponseEntity.ok(service.updateImg(id, base64));
+//    }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id){
         service.deleteProduct(id);
