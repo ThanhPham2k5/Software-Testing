@@ -1,0 +1,183 @@
+.home {
+  background: linear-gradient(
+    to bottom,
+    var(--color-middle),
+    var(--color-background)
+  );
+  height: 100vh;
+}
+
+.header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 135px;
+  padding-top: 36px;
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -30px;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-background);
+  opacity: 0.5;
+}
+
+.brand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+.brand-name {
+  font-size: 3.2rem;
+  font-weight: 600;
+  color: var(--color-background);
+  margin-left: 18px;
+}
+
+.brand-name::before {
+  content: "Flo";
+  color: var(--color-content);
+}
+
+.signin {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-main);
+  padding: 10px 20px;
+  border-radius: 16px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.signin-ico,
+.signin-name {
+  position: relative;
+  z-index: 1;
+}
+
+.signin-name {
+  font-size: 2.4rem;
+  font-weight: 400;
+  margin-left: 12px;
+  color: var(--color-background);
+}
+
+.signin::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: var(--color-content);
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  transition: transform 0.3s ease;
+  transform: translateX(-100%);
+  z-index: 0;
+}
+
+.signin:hover::after {
+  transform: translateX(0);
+}
+
+.body {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin: 150px 135px 0 135px;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-evenly;
+}
+
+.intro-main-slogan {
+  font-size: 6.2rem;
+  font-weight: 600;
+  color: var(--color-background);
+}
+
+.intro-main-slogan::before {
+  content: "Open a Book,";
+  display: block;
+  font-size: 6.2rem;
+  font-weight: 600;
+  color: var(--color-content);
+  margin-bottom: 0.4rem;
+}
+
+.intro-sub-slogan {
+  width: calc(100% - 30%);
+  font-size: 2.4rem;
+  font-weight: 400;
+  color: var(--color-background);
+  margin: 26px 0;
+}
+
+.intro-button {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-background);
+  text-decoration: none;
+  padding: 16px 36px;
+  border-radius: 32px;
+  cursor: pointer;
+}
+
+.intro-button-name {
+  font-size: 2.4rem;
+  font-weight: 400;
+  color: var(--color-content);
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.intro-button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-content);
+  border-radius: 32px;
+  color: var(--color-background);
+  transition: transform 0.3s ease;
+  transform: translateX(-100%);
+  z-index: 0;
+}
+
+.intro-button:hover::after {
+  transform: translateX(0);
+}
+
+.intro-button:hover .intro-button-name {
+  color: var(--color-background);
+}
+
+.picture {
+  position: relative;
+  width: 550px;
+  height: 423px;
+  background-color: var(--color-content);
+  border-radius: 24px;
+}
+
+.picture-img {
+  position: absolute;
+  bottom: 0;
+}
