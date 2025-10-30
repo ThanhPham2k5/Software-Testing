@@ -204,3 +204,12 @@ body {
   user-select: none;
   margin: 0 auto;
 }
+
+body {
+  background: linear-gradient(
+    to bottom,
+    var(--color-middle),
+    var(--color-background)
+  );
+  min-height: 100vh;
+}
