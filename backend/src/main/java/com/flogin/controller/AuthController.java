@@ -3,6 +3,7 @@ package com.flogin.controller;
 import com.flogin.dto.LoginRequestDTO;
 import com.flogin.dto.LoginResponseDTO;
 import com.flogin.service.AuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO account){
         LoginResponseDTO responseAccount = service.login(account);
-        return ResponseEntity.ok(responseAccount);
+        if (responseAccount.isStatus()) {
+            return ResponseEntity.ok(responseAccount);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseAccount);
+        }
     }
 }
