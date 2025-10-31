@@ -5,6 +5,10 @@ public class LoginResponseDTO {
     private String message;
     private String token;
 
+    public LoginResponseDTO(){
+
+    }
+
     public LoginResponseDTO(boolean status, String message, String token) {
         this.status = status;
         this.message = message;
