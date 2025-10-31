@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "../styles/pages/Login.css";
 import { Link, useNavigate } from "react-router-dom";
+import { validatePassword } from "../utils/validate/validatePassword";
+import { validateUsername } from "../utils/validate/validateUsername";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -17,14 +19,18 @@ function Login() {
 
   function onSubmit(e) {
     e.preventDefault();
-    if (username === "admin" && password === "admin") {
+    if (
+      validateUsername(username) === "username hop le" &&
+      validatePassword(password) === "password hop le"
+    ) {
+      setErrorUsername("");
+      setErrorPassword("");
       navigate("/admin/dashboard");
       return;
     }
-    if (username !== "admin") setErrorUsername("username");
-    else setErrorUsername("");
-    if (password !== "admin") setErrorPassword("password");
-    else setErrorPassword("");
+
+    setErrorUsername(validateUsername(username));
+    setErrorPassword(validatePassword(password));
   }
 
   return (
@@ -66,8 +72,8 @@ function Login() {
               />
             </div>
 
-            {errorUsername === "username" ? (
-              <div className="form-user-error">Username is not correct.</div>
+            {errorUsername !== "username hop le" ? (
+              <div className="form-user-error">{errorUsername}</div>
             ) : null}
 
             <div className="form-pass">
@@ -115,8 +121,8 @@ function Login() {
               )}
             </div>
 
-            {errorPassword === "password" ? (
-              <div className="form-pass-error">Password is not correct.</div>
+            {errorPassword !== "password hop le" ? (
+              <div className="form-pass-error">{errorPassword}</div>
             ) : null}
 
             <button className="form-button" onClick={(e) => onSubmit(e)}>
