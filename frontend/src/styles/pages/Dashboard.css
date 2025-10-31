@@ -112,7 +112,7 @@
     opacity: 0;
   }
   to {
-    max-height: 400px;
+    max-height: 180px;
     opacity: 1;
   }
 }
@@ -183,9 +183,10 @@
   position: fixed;
   left: 40px;
   top: 126px;
+  bottom: 30px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: start;
   background-color: var(--color-background);
   padding: 36px;
@@ -260,9 +261,15 @@
 .price-body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: start;
   animation: slideDown 0.5s ease 1;
+}
+
+.category-body {
+  overflow-y: scroll;
+  padding-right: 60px;
+  max-height: 180px;
 }
 
 .radio {
@@ -307,10 +314,10 @@
 .content {
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: start;
   justify-content: center;
-  margin-left: 34px;
   margin-bottom: 80px;
+  margin-left: 380px;
 }
 
 .create-button-name {

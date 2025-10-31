@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import "../styles/Home.css";
+import "../styles/pages/Home.css";
 import { Link } from "react-router-dom";
 
 function Home() {

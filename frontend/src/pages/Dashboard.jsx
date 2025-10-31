@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import "../styles/Dashboard.css";
+import "../styles/pages/Dashboard.css";
 import { Link } from "react-router-dom";
+import CreateBook from "../components/CreateBook";
+import DetailBook from "../components/DetailBook";
+import ModifyBook from "../components/ModifyBook";
 
 function Dashboard() {
   const [userClicked, setUserClicked] = useState(false);
   const [showCategory, setShowCategory] = useState(true);
   const [showPrice, setShowPrice] = useState(true);
   const userRef = useRef(null);
+  const [createButton, setCreateButton] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const [modifyButton, setModifyButton] = useState(false);
 
   function userClick() {
     setUserClicked((prev) => !prev);
@@ -154,6 +160,46 @@ function Dashboard() {
                       />
                       Novel
                     </label>
+
+                    <label className="radio">
+                      <input
+                        type="radio"
+                        className="radio-button"
+                        name="categories"
+                        id="novel"
+                      />
+                      Novel
+                    </label>
+
+                    <label className="radio">
+                      <input
+                        type="radio"
+                        className="radio-button"
+                        name="categories"
+                        id="novel"
+                      />
+                      Novel
+                    </label>
+
+                    <label className="radio">
+                      <input
+                        type="radio"
+                        className="radio-button"
+                        name="categories"
+                        id="novel"
+                      />
+                      Novel
+                    </label>
+
+                    <label className="radio">
+                      <input
+                        type="radio"
+                        className="radio-button"
+                        name="categories"
+                        id="novel"
+                      />
+                      Novel
+                    </label>
                   </div>
                 ) : null}
               </div>
@@ -225,7 +271,10 @@ function Dashboard() {
           </div>
 
           <div className="content">
-            <div className="create-button">
+            <div
+              className="create-button"
+              onClick={() => setCreateButton(true)}
+            >
               <img
                 src="/create-button-ico.svg"
                 alt="create-button-ico"
@@ -236,230 +285,255 @@ function Dashboard() {
             </div>
 
             <div className="card-body">
-              {/* can be replaced with create or view book */}
-              <div className="card-list">
-                {/* example */}
-                <div className="card">
-                  <div className="card-picture">
-                    <img
-                      src="/card-picture-img-default.svg"
-                      alt="card-picture-img"
-                      className="card-picture-img"
-                    />
-                  </div>
+              {/* can be replaced with create or view or modify book */}
+              {createButton ? (
+                <>
+                  <CreateBook checkCreate={setCreateButton}></CreateBook>
+                </>
+              ) : modifyButton ? (
+                <>
+                  <ModifyBook checkModify={setModifyButton}></ModifyBook>
+                </>
+              ) : showButton ? (
+                <>
+                  <DetailBook
+                    checkShow={setShowButton}
+                    checkModify={setModifyButton}
+                  ></DetailBook>
+                </>
+              ) : null}
 
-                  <div className="card-info">
-                    <div className="card-price">$1,100</div>
+              {!createButton && !showButton && !modifyButton ? (
+                <>
+                  <div className="card-list">
+                    {/* example */}
+                    <div className="card" onClick={() => setShowButton(true)}>
+                      <div className="card-picture">
+                        <img
+                          src="/card-picture-img-default.svg"
+                          alt="card-picture-img"
+                          className="card-picture-img"
+                        />
+                      </div>
 
-                    <div className="card-name">Đắc Nhân Tâm</div>
+                      <div className="card-info">
+                        <div className="card-price">$1,100</div>
 
-                    <div className="card-quantity">
-                      <img
-                        src="/card-quantity-ico-black.svg"
-                        alt="card-quantity-ico"
-                        className="card-quantity-ico"
-                      />
+                        <div className="card-name">Đắc Nhân Tâm</div>
 
-                      <div className="card-quantity-number">120</div>
+                        <div className="card-quantity">
+                          <img
+                            src="/card-quantity-ico-black.svg"
+                            alt="card-quantity-ico"
+                            className="card-quantity-ico"
+                          />
+
+                          <div className="card-quantity-number">120</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* fake prods */}
+                    <div className="card">
+                      <div className="card-picture">
+                        <img
+                          src="/card-picture-img-default.svg"
+                          alt="card-picture-img"
+                          className="card-picture-img"
+                        />
+                      </div>
+
+                      <div className="card-info">
+                        <div className="card-price">$1,100</div>
+
+                        <div className="card-name">Đắc Nhân Tâm</div>
+
+                        <div className="card-quantity">
+                          <img
+                            src="/card-quantity-ico-black.svg"
+                            alt="card-quantity-ico"
+                            className="card-quantity-ico"
+                          />
+
+                          <div className="card-quantity-number">120</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="card">
+                      <div className="card-picture">
+                        <img
+                          src="/card-picture-img-default.svg"
+                          alt="card-picture-img"
+                          className="card-picture-img"
+                        />
+                      </div>
+
+                      <div className="card-info">
+                        <div className="card-price">$1,100</div>
+
+                        <div className="card-name">Đắc Nhân Tâm</div>
+
+                        <div className="card-quantity">
+                          <img
+                            src="/card-quantity-ico-black.svg"
+                            alt="card-quantity-ico"
+                            className="card-quantity-ico"
+                          />
+
+                          <div className="card-quantity-number">120</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="card">
+                      <div className="card-picture">
+                        <img
+                          src="/card-picture-img-default.svg"
+                          alt="card-picture-img"
+                          className="card-picture-img"
+                        />
+                      </div>
+
+                      <div className="card-info">
+                        <div className="card-price">$1,100</div>
+
+                        <div className="card-name">Đắc Nhân Tâm</div>
+
+                        <div className="card-quantity">
+                          <img
+                            src="/card-quantity-ico-black.svg"
+                            alt="card-quantity-ico"
+                            className="card-quantity-ico"
+                          />
+
+                          <div className="card-quantity-number">120</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="card">
+                      <div className="card-picture">
+                        <img
+                          src="/card-picture-img-default.svg"
+                          alt="card-picture-img"
+                          className="card-picture-img"
+                        />
+                      </div>
+
+                      <div className="card-info">
+                        <div className="card-price">$1,100</div>
+
+                        <div className="card-name">Đắc Nhân Tâm</div>
+
+                        <div className="card-quantity">
+                          <img
+                            src="/card-quantity-ico-black.svg"
+                            alt="card-quantity-ico"
+                            className="card-quantity-ico"
+                          />
+
+                          <div className="card-quantity-number">120</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="card">
+                      <div className="card-picture">
+                        <img
+                          src="/card-picture-img-default.svg"
+                          alt="card-picture-img"
+                          className="card-picture-img"
+                        />
+                      </div>
+
+                      <div className="card-info">
+                        <div className="card-price">$1,100</div>
+
+                        <div className="card-name">Đắc Nhân Tâm</div>
+
+                        <div className="card-quantity">
+                          <img
+                            src="/card-quantity-ico-black.svg"
+                            alt="card-quantity-ico"
+                            className="card-quantity-ico"
+                          />
+
+                          <div className="card-quantity-number">120</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="card">
+                      <div className="card-picture">
+                        <img
+                          src="/card-picture-img-default.svg"
+                          alt="card-picture-img"
+                          className="card-picture-img"
+                        />
+                      </div>
+
+                      <div className="card-info">
+                        <div className="card-price">$1,100</div>
+
+                        <div className="card-name">Đắc Nhân Tâm</div>
+
+                        <div className="card-quantity">
+                          <img
+                            src="/card-quantity-ico-black.svg"
+                            alt="card-quantity-ico"
+                            className="card-quantity-ico"
+                          />
+
+                          <div className="card-quantity-number">120</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="card">
+                      <div className="card-picture">
+                        <img
+                          src="/card-picture-img-default.svg"
+                          alt="card-picture-img"
+                          className="card-picture-img"
+                        />
+                      </div>
+
+                      <div className="card-info">
+                        <div className="card-price">$1,100</div>
+
+                        <div className="card-name">Đắc Nhân Tâm</div>
+
+                        <div className="card-quantity">
+                          <img
+                            src="/card-quantity-ico-black.svg"
+                            alt="card-quantity-ico"
+                            className="card-quantity-ico"
+                          />
+
+                          <div className="card-quantity-number">120</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* fake prods */}
-                <div className="card">
-                  <div className="card-picture">
-                    <img
-                      src="/card-picture-img-default.svg"
-                      alt="card-picture-img"
-                      className="card-picture-img"
+                  <div className="card-page">
+                    <div className="prev-page page-selected">1</div>
+
+                    <div className="current-page">2</div>
+
+                    <div className="next-page">3</div>
+
+                    <input
+                      type="text"
+                      className="input-page"
+                      placeholder="..."
                     />
+
+                    <div className="final-page">36</div>
                   </div>
-
-                  <div className="card-info">
-                    <div className="card-price">$1,100</div>
-
-                    <div className="card-name">Đắc Nhân Tâm</div>
-
-                    <div className="card-quantity">
-                      <img
-                        src="/card-quantity-ico-black.svg"
-                        alt="card-quantity-ico"
-                        className="card-quantity-ico"
-                      />
-
-                      <div className="card-quantity-number">120</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="card-picture">
-                    <img
-                      src="/card-picture-img-default.svg"
-                      alt="card-picture-img"
-                      className="card-picture-img"
-                    />
-                  </div>
-
-                  <div className="card-info">
-                    <div className="card-price">$1,100</div>
-
-                    <div className="card-name">Đắc Nhân Tâm</div>
-
-                    <div className="card-quantity">
-                      <img
-                        src="/card-quantity-ico-black.svg"
-                        alt="card-quantity-ico"
-                        className="card-quantity-ico"
-                      />
-
-                      <div className="card-quantity-number">120</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="card-picture">
-                    <img
-                      src="/card-picture-img-default.svg"
-                      alt="card-picture-img"
-                      className="card-picture-img"
-                    />
-                  </div>
-
-                  <div className="card-info">
-                    <div className="card-price">$1,100</div>
-
-                    <div className="card-name">Đắc Nhân Tâm</div>
-
-                    <div className="card-quantity">
-                      <img
-                        src="/card-quantity-ico-black.svg"
-                        alt="card-quantity-ico"
-                        className="card-quantity-ico"
-                      />
-
-                      <div className="card-quantity-number">120</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="card-picture">
-                    <img
-                      src="/card-picture-img-default.svg"
-                      alt="card-picture-img"
-                      className="card-picture-img"
-                    />
-                  </div>
-
-                  <div className="card-info">
-                    <div className="card-price">$1,100</div>
-
-                    <div className="card-name">Đắc Nhân Tâm</div>
-
-                    <div className="card-quantity">
-                      <img
-                        src="/card-quantity-ico-black.svg"
-                        alt="card-quantity-ico"
-                        className="card-quantity-ico"
-                      />
-
-                      <div className="card-quantity-number">120</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="card-picture">
-                    <img
-                      src="/card-picture-img-default.svg"
-                      alt="card-picture-img"
-                      className="card-picture-img"
-                    />
-                  </div>
-
-                  <div className="card-info">
-                    <div className="card-price">$1,100</div>
-
-                    <div className="card-name">Đắc Nhân Tâm</div>
-
-                    <div className="card-quantity">
-                      <img
-                        src="/card-quantity-ico-black.svg"
-                        alt="card-quantity-ico"
-                        className="card-quantity-ico"
-                      />
-
-                      <div className="card-quantity-number">120</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="card-picture">
-                    <img
-                      src="/card-picture-img-default.svg"
-                      alt="card-picture-img"
-                      className="card-picture-img"
-                    />
-                  </div>
-
-                  <div className="card-info">
-                    <div className="card-price">$1,100</div>
-
-                    <div className="card-name">Đắc Nhân Tâm</div>
-
-                    <div className="card-quantity">
-                      <img
-                        src="/card-quantity-ico-black.svg"
-                        alt="card-quantity-ico"
-                        className="card-quantity-ico"
-                      />
-
-                      <div className="card-quantity-number">120</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="card-picture">
-                    <img
-                      src="/card-picture-img-default.svg"
-                      alt="card-picture-img"
-                      className="card-picture-img"
-                    />
-                  </div>
-
-                  <div className="card-info">
-                    <div className="card-price">$1,100</div>
-
-                    <div className="card-name">Đắc Nhân Tâm</div>
-
-                    <div className="card-quantity">
-                      <img
-                        src="/card-quantity-ico-black.svg"
-                        alt="card-quantity-ico"
-                        className="card-quantity-ico"
-                      />
-
-                      <div className="card-quantity-number">120</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="card-page">
-                <div className="prev-page page-selected">1</div>
-
-                <div className="current-page">2</div>
-
-                <div className="next-page">3</div>
-
-                <input type="text" className="input-page" placeholder="..." />
-
-                <div className="final-page">36</div>
-              </div>
+                </>
+              ) : null}
             </div>
           </div>
         </div>
