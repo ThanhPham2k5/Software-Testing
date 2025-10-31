@@ -19,17 +19,24 @@ public class AuthService {
     }
 
     public LoginResponseDTO login(LoginRequestDTO request){
+        if(request.getUsername() == null || request.getUsername().isBlank()){
+            return new LoginResponseDTO(false, "Username cannot be empty", null);
+        }
+        if(request.getPassword() == null || request.getPassword().isBlank()){
+            return new LoginResponseDTO(false, "Password cannot be empty", null);
+        }
+
         Optional<AccountEntity> account = repository.findByUsername(request.getUsername());
         if(account.isEmpty()){
-            return new LoginResponseDTO(false,"Tai khoan khong ton tai",null);
+            return new LoginResponseDTO(false,"Username is incorrect",null);
         }
 
         AccountEntity foundAccount = account.get();
         boolean match = request.getPassword().equals(foundAccount.getPassword());
         if(!match){
-            return new LoginResponseDTO(false,"Mat khau khong dung",null);
+            return new LoginResponseDTO(false,"Password is incorrect",null);
         }
 
-        return new LoginResponseDTO(true,"Dang nhap thanh cong","token-123");
+        return new LoginResponseDTO(true,"Login successful","token-123");
     }
 }

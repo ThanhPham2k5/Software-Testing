@@ -11,7 +11,7 @@ public class LoginResponseDTO {
         this.token = token;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
 

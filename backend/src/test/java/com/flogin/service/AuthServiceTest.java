@@ -28,7 +28,7 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("Login thanh cong")
+    @DisplayName("Login successful")
     void testLoginSuccess(){
         LoginRequestDTO request = new LoginRequestDTO("testuser", "password123");
 
@@ -41,12 +41,12 @@ class AuthServiceTest {
 
         LoginResponseDTO response = authService.login(request);
 
-        assertTrue(response.isStatus());
-        assertEquals("Dang nhap thanh cong", response.getMessage());
+        assertTrue(response.getStatus());
+        assertEquals("Login successful", response.getMessage());
     }
 
     @Test
-    @DisplayName("Login that bai voi username sai")
+    @DisplayName("Login fail with incorrect username")
     void testLoginFailWithUsername(){
         LoginRequestDTO request = new LoginRequestDTO("testuser", "password123");
 
@@ -55,13 +55,13 @@ class AuthServiceTest {
 
         LoginResponseDTO response = authService.login(request);
 
-        assertFalse(response.isStatus());
-        assertEquals("Tai khoan khong ton tai", response.getMessage());
+        assertFalse(response.getStatus());
+        assertEquals("Username is incorrect", response.getMessage());
         assertNull(response.getToken());
     }
 
     @Test
-    @DisplayName("Login that bai voi password sai")
+    @DisplayName("Login fail with incorrect password")
     void testLoginFailWithPassword(){
         LoginRequestDTO request = new LoginRequestDTO("testuser", "password123");
 
@@ -74,8 +74,53 @@ class AuthServiceTest {
 
         LoginResponseDTO response = authService.login(request);
 
-        assertFalse(response.isStatus());
-        assertEquals("Mat khau khong dung", response.getMessage());
+        assertFalse(response.getStatus());
+        assertEquals("Password is incorrect", response.getMessage());
         assertNull(response.getToken());
     }
+
+    @Test
+    @DisplayName("Login fail with empty username")
+    void testLoginFailWithEmptyUsername(){
+        LoginRequestDTO request = new LoginRequestDTO("", "123");
+
+        LoginResponseDTO response = authService.login(request);
+        assertFalse(response.getStatus());
+        assertEquals("Username cannot be empty", response.getMessage());
+        assertNull(response.getToken());
+    }
+
+    @Test
+    @DisplayName("Login fail with empty password")
+    void testLoginFailWithEmptyPassword(){
+        LoginRequestDTO request = new LoginRequestDTO("testuser", "");
+
+        LoginResponseDTO response = authService.login(request);
+        assertFalse(response.getStatus());
+        assertEquals("Password cannot be empty", response.getMessage());
+        assertNull(response.getToken());
+    }
+
+    @Test
+    @DisplayName("Login fail with null username")
+    void testLoginFailWithNullUsername(){
+        LoginRequestDTO request = new LoginRequestDTO(null, "123");
+
+        LoginResponseDTO response = authService.login(request);
+        assertFalse(response.getStatus());
+        assertEquals("Username cannot be empty", response.getMessage());
+        assertNull(response.getToken());
+    }
+
+    @Test
+    @DisplayName("Login fail with nullpassword")
+    void testLoginFailWithNullPassword(){
+        LoginRequestDTO request = new LoginRequestDTO("testuser", null);
+
+        LoginResponseDTO response = authService.login(request);
+        assertFalse(response.getStatus());
+        assertEquals("Password cannot be empty", response.getMessage());
+        assertNull(response.getToken());
+    }
+
 }

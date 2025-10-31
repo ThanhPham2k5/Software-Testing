@@ -20,7 +20,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO account){
         LoginResponseDTO responseAccount = service.login(account);
-        if (responseAccount.isStatus()) {
+        if (responseAccount.getStatus()) {
             return ResponseEntity.ok(responseAccount);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseAccount);
