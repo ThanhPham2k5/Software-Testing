@@ -36,7 +36,7 @@ class AuthControllerIntegrationTest {
     void testLogin_Success() throws Exception {
         LoginRequestDTO request = new LoginRequestDTO("testuser", "password123");
 
-        LoginResponseDTO mockResponse = new LoginResponseDTO(true, "Dang nhap thanh cong", "token-123");
+        LoginResponseDTO mockResponse = new LoginResponseDTO(true, "Login successful", "token-123");
 
         when(authService.login(any(LoginRequestDTO.class)))
                 .thenReturn(mockResponse);
@@ -46,7 +46,7 @@ class AuthControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk()) // Mong đợi HTTP 200
                 .andExpect(jsonPath("$.status").value(true))
-                .andExpect(jsonPath("$.message").value("Dang nhap thanh cong"))
+                .andExpect(jsonPath("$.message").value("Login successful"))
                 .andExpect(jsonPath("$.token").value("token-123"));
     }
 
@@ -55,7 +55,7 @@ class AuthControllerIntegrationTest {
     void testLogin_WrongPassword() throws Exception {
         LoginRequestDTO request = new LoginRequestDTO("testuser", "wrongpassword");
 
-        LoginResponseDTO mockResponse = new LoginResponseDTO(false, "Mat khau khong dung", null);
+        LoginResponseDTO mockResponse = new LoginResponseDTO(false, "Password is incorrect", null);
 
         when(authService.login(any(LoginRequestDTO.class)))
                 .thenReturn(mockResponse);
@@ -65,7 +65,7 @@ class AuthControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.status").value(false))
-                .andExpect(jsonPath("$.message").value("Mat khau khong dung"))
+                .andExpect(jsonPath("$.message").value("Password is incorrect"))
                 .andExpect(jsonPath("$.token").isEmpty());
     }
 
@@ -74,7 +74,7 @@ class AuthControllerIntegrationTest {
     void testLogin_UserNotFound() throws Exception {
         LoginRequestDTO request = new LoginRequestDTO("nonexistentuser", "12345");
 
-        LoginResponseDTO mockResponse = new LoginResponseDTO(false, "Tai khoan khong ton tai", null);
+        LoginResponseDTO mockResponse = new LoginResponseDTO(false, "Username is incorrect", null);
 
         when(authService.login(any(LoginRequestDTO.class)))
                 .thenReturn(mockResponse);
@@ -84,7 +84,7 @@ class AuthControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.status").value(false))
-                .andExpect(jsonPath("$.message").value("Tai khoan khong ton tai"))
+                .andExpect(jsonPath("$.message").value("Username is incorrect"))
                 .andExpect(jsonPath("$.token").isEmpty());
     }
 }
