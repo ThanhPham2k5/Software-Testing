@@ -4,7 +4,7 @@ import com.flogin.entity.ProductEntity;
 
 public class ProductDTO {
 
-    private long id;
+//    private long id;
     private String name;
     private double price;
     private int quantity;
@@ -17,8 +17,7 @@ public class ProductDTO {
 
     }
 
-    public ProductDTO(long id, String name, double price, int quantity, String description, ProductEntity.Category category) {
-        this.id = id;
+    public ProductDTO(String name, double price, int quantity, String description, ProductEntity.Category category) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
@@ -32,14 +31,6 @@ public class ProductDTO {
 
     public void setCategory(ProductEntity.Category category) {
         this.category = category;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
