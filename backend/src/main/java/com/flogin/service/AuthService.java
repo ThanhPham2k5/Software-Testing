@@ -1,9 +1,14 @@
 package com.flogin.service;
 
+import com.flogin.dto.LoginRequestDTO;
+import com.flogin.dto.LoginResponseDTO;
+import com.flogin.entity.AccountEntity;
 import com.flogin.repository.AccountRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -13,18 +18,18 @@ public class AuthService {
         this.repository = repository;
     }
 
-    public boolean login(String username, String password){
-        if(username == null || username.isBlank())
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "username cannot be blank"
-            );
+    public LoginResponseDTO login(LoginRequestDTO request){
+        Optional<AccountEntity> account = repository.findByUsername(request.getUsername());
+        if(account.isEmpty()){
+            return new LoginResponseDTO(false,"Tai khoan khong ton tai",null);
+        }
 
-        if(password == null || password.isBlank())
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "username cannot be blank"
-            );
+        AccountEntity foundAccount = account.get();
+        boolean match = request.getPassword().equals(foundAccount.getPassword());
+        if(!match){
+            return new LoginResponseDTO(false,"Mat khau khong dung",null);
+        }
 
-        System.out.println("Login attempt: username=" + username + ", password=" + password);
-        return repository.findByUsernameAndPassword(username.trim(), password.trim()).isPresent();
+        return new LoginResponseDTO(true,"Dang nhap thanh cong","token-123");
     }
 }
