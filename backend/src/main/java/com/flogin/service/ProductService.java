@@ -88,10 +88,10 @@ public class ProductService {
                     HttpStatus.BAD_REQUEST, "Product's category cannot be empty"
             );
 
-        if(dto.getImgBase64() == null || dto.getImgBase64().isBlank())
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Image cannot be blank"
-            );
+//        if(dto.getImgBase64() == null || dto.getImgBase64().isBlank())
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST, "Image cannot be blank"
+//            );
 
     }
 
