@@ -2,15 +2,19 @@ package com.flogin.service;
 
 import com.flogin.dto.ProductDTO;
 import com.flogin.entity.ProductEntity;
+import com.flogin.helper.ProductMapper;
 import com.flogin.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,6 +44,8 @@ class ProductServiceTest {
                 "this is a description",
                 ProductEntity.Category.COMIC
         );
+        newProduct.setImgBase64("test-img-data");
+
         ProductEntity entity = new ProductEntity(
                 1,
                 "abc",
@@ -51,11 +57,19 @@ class ProductServiceTest {
 
         when(mockRepository.save(any(ProductEntity.class))).thenReturn(entity);
 
-        ProductDTO result = service.createProduct(newProduct);
+        try(MockedStatic<ProductMapper> mockMapper = mockStatic(ProductMapper.class)) {
+            mockMapper.when(() -> ProductMapper.toEntity(any(ProductDTO.class)))
+                    .thenReturn(entity);
 
-        assertNotNull(result);
-        assertEquals("abc", result.getName());
-        verify(mockRepository, times(1)).save(any(ProductEntity.class));
+            mockMapper.when(() -> ProductMapper.toDTO(any(ProductEntity.class)))
+                    .thenReturn(newProduct);
+
+            ProductDTO result = service.createProduct(newProduct);
+
+            assertNotNull(result);
+            assertEquals("abc", result.getName());
+            verify(mockRepository, times(1)).save(any(ProductEntity.class));
+        }
     }
 
     @Test
@@ -87,6 +101,8 @@ class ProductServiceTest {
                 "updated description",
                 ProductEntity.Category.COMIC
         );
+        updatedProduct.setImgBase64("test-img-data");
+
         ProductEntity entity = new ProductEntity(
                 1,
                 "abc",
@@ -107,12 +123,20 @@ class ProductServiceTest {
         when(mockRepository.findById(any(Long.class))).thenReturn(Optional.of(entity));
         when(mockRepository.save(any(ProductEntity.class))).thenReturn(updatedEntity);
 
-        ProductDTO result = service.updateProduct(1, updatedProduct);
+        try(MockedStatic<ProductMapper> mockMapper = mockStatic(ProductMapper.class)){
+            mockMapper.when(() -> ProductMapper.toEntity(any(ProductDTO.class)))
+                    .thenReturn(updatedEntity);
 
-        assertNotNull(result);
-        assertEquals(updatedProduct.getDescription(), result.getDescription());
-        verify(mockRepository, times(1)).findById(any(Long.class));
-        verify(mockRepository, times(1)).save(any(ProductEntity.class));
+            mockMapper.when(() -> ProductMapper.toDTO(any(ProductEntity.class)))
+                    .thenReturn(updatedProduct);
+
+            ProductDTO result = service.updateProduct(1, updatedProduct);
+
+            assertNotNull(result);
+            assertEquals(updatedProduct.getDescription(), result.getDescription());
+            verify(mockRepository, times(1)).findById(any(Long.class));
+            verify(mockRepository, times(1)).save(any(ProductEntity.class));
+        }
     }
 
     @Test
@@ -132,5 +156,152 @@ class ProductServiceTest {
         assertTrue(capturedEntity.isDeleted());
     }
 
+    @Test
+    @DisplayName("Get All Products test")
+    void testGetAll(){
+        ProductEntity entity1 = new ProductEntity();
+        ProductEntity entity2 = new ProductEntity();
+        entity1.setName("Book1");
+        entity2.setName("Book2");
 
+        List<ProductEntity> entityList = List.of(entity1, entity2);
+
+        Page<ProductEntity> entityPage = new PageImpl<>(entityList, PageRequest.of(0,2), 2);
+
+        when(mockRepository.findAllByIsDeletedFalse(any(PageRequest.class)))
+                .thenReturn(entityPage);
+
+        try(MockedStatic<ProductMapper> mockMapper = mockStatic(ProductMapper.class)){
+            ProductDTO dto1 = new ProductDTO();
+            ProductDTO dto2 = new ProductDTO();
+
+            dto1.setName("Book1");
+            dto2.setName("Book2");
+
+            mockMapper.when(() -> ProductMapper.toDTO(entity1)).thenReturn(dto1);
+            mockMapper.when(() -> ProductMapper.toDTO(entity2)).thenReturn(dto2);
+
+            Page<ProductDTO> result = service.getAllProducts(0,2);
+
+            assertNotNull(result);
+            assertEquals(2, result.getContent().size());
+            assertEquals("Book1", result.getContent().get(0).getName());
+            assertEquals("Book2", result.getContent().get(1).getName());
+
+            verify(mockRepository, times(1)).findAllByIsDeletedFalse(any(PageRequest.class));
+        }
+
+    }
+
+    @Test
+    @DisplayName("Delete Product fail with product not found test")
+    void testDeleteProductFailWithNotFound(){
+        when(mockRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.deleteProduct(1)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        verify(mockRepository, times(1)).findById(any(Long.class));
+    }
+
+    @Test
+    @DisplayName("get product fail test")
+    void testGetProductFail(){
+        when(mockRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.getProduct(1)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        verify(mockRepository, times(1)).findById(any(Long.class));
+    }
+
+    @Test
+    @DisplayName("validate product fail with empty name")
+    void testValidateFailWithEmptyName(){
+        ProductDTO dto = new ProductDTO();
+        dto.setName("");
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("validate product fail with empty description")
+    void testValidateFailWithEmptyDescription(){
+        ProductDTO dto = new ProductDTO();
+        dto.setDescription("");
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("validate product fail with null category")
+    void testValidateFailWithNullCategory(){
+        ProductDTO dto = new ProductDTO();
+        dto.setCategory(null);
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("validate product fail with empty img data")
+    void testValidateFailWithEmptyImgBase64(){
+        ProductDTO dto = new ProductDTO();
+        dto.setImgBase64("");
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("validate product fail with negative price")
+    void testValidateFailWithNegativePrice(){
+        ProductDTO dto = new ProductDTO();
+        dto.setPrice(-1);
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("validate product fail with negative quantity")
+    void testValidateFailWithNegativeQuantity(){
+        ProductDTO dto = new ProductDTO();
+        dto.setQuantity(-1);
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
 }

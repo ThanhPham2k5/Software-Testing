@@ -51,24 +51,13 @@ public class ProductService {
         return ProductMapper.toDTO(updatedEntity);
     }
 
-//    public ProductDTO updateImg(long id, String base64){
-//        byte[] bytes = Base64.getDecoder().decode(base64);
-//        ProductEntity entity = repository.findById(id).orElseThrow(
-//                () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
-//        );
-//
-//        entity.setImgData(bytes);
-//        repository.save(entity);
-//        return ProductMapper.toDTO(entity);
-//    }
-
     public void validateProduct(ProductDTO dto){
         if(dto.getName() == null || dto.getName().isBlank())
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Product's name cannot be empty"
             );
 
-        if(dto.getPrice() < 0)
+        if(dto.getPrice() <= 0)
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Product's price can't be negative"
             );
@@ -83,15 +72,15 @@ public class ProductService {
                     HttpStatus.BAD_REQUEST, "Product's description cannot be empty"
             );
 
-        if(dto.getCategory().toString() == null || dto.getCategory().toString().isBlank())
+        if(dto.getCategory().toString() == null)
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Product's category cannot be empty"
             );
 
-//        if(dto.getImgBase64() == null || dto.getImgBase64().isBlank())
-//            throw new ResponseStatusException(
-//                    HttpStatus.BAD_REQUEST, "Image cannot be blank"
-//            );
+        if(dto.getImgBase64() == null || dto.getImgBase64().isBlank())
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Image cannot be blank"
+            );
 
     }
 
