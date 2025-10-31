@@ -84,10 +84,11 @@ class AuthServiceTest {
     void testLoginFailWithEmptyUsername(){
         LoginRequestDTO request = new LoginRequestDTO("", "123");
 
-        LoginResponseDTO response = authService.login(request);
-        assertFalse(response.getStatus());
-        assertEquals("Username cannot be empty", response.getMessage());
-        assertNull(response.getToken());
+        IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                ()->authService.login(request)
+        );
+        assertEquals("Username cannot be empty", thrown.getMessage());
     }
 
     @Test
@@ -95,10 +96,11 @@ class AuthServiceTest {
     void testLoginFailWithEmptyPassword(){
         LoginRequestDTO request = new LoginRequestDTO("testuser", "");
 
-        LoginResponseDTO response = authService.login(request);
-        assertFalse(response.getStatus());
-        assertEquals("Password cannot be empty", response.getMessage());
-        assertNull(response.getToken());
+        IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                ()->authService.login(request)
+        );
+        assertEquals("Password cannot be empty", thrown.getMessage());
     }
 
     @Test
@@ -106,21 +108,23 @@ class AuthServiceTest {
     void testLoginFailWithNullUsername(){
         LoginRequestDTO request = new LoginRequestDTO(null, "123");
 
-        LoginResponseDTO response = authService.login(request);
-        assertFalse(response.getStatus());
-        assertEquals("Username cannot be empty", response.getMessage());
-        assertNull(response.getToken());
+        IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                ()->authService.login(request)
+        );
+        assertEquals("Username cannot be empty", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("Login fail with nullpassword")
+    @DisplayName("Login fail with null password")
     void testLoginFailWithNullPassword(){
         LoginRequestDTO request = new LoginRequestDTO("testuser", null);
 
-        LoginResponseDTO response = authService.login(request);
-        assertFalse(response.getStatus());
-        assertEquals("Password cannot be empty", response.getMessage());
-        assertNull(response.getToken());
+        IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                ()->authService.login(request)
+        );
+        assertEquals("Password cannot be empty", thrown.getMessage());
     }
 
 }

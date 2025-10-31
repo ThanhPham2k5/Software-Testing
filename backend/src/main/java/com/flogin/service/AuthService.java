@@ -19,12 +19,8 @@ public class AuthService {
     }
 
     public LoginResponseDTO login(LoginRequestDTO request){
-        if(request.getUsername() == null || request.getUsername().isBlank()){
-            return new LoginResponseDTO(false, "Username cannot be empty", null);
-        }
-        if(request.getPassword() == null || request.getPassword().isBlank()){
-            return new LoginResponseDTO(false, "Password cannot be empty", null);
-        }
+        validateUsername(request.getUsername());
+        validatePassword(request.getPassword());
 
         Optional<AccountEntity> account = repository.findByUsername(request.getUsername());
         if(account.isEmpty()){
@@ -38,5 +34,15 @@ public class AuthService {
         }
 
         return new LoginResponseDTO(true,"Login successful","token-123");
+    }
+
+    public void validateUsername(String username){
+        if(username == null || username.isBlank())
+            throw new IllegalArgumentException("Username cannot be empty");
+    }
+
+    public void validatePassword(String password){
+        if(password == null || password.isBlank())
+            throw new IllegalArgumentException("Password cannot be empty");
     }
 }
