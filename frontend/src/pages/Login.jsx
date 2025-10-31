@@ -3,6 +3,7 @@ import "../styles/pages/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { validatePassword } from "../utils/validate/validatePassword";
 import { validateUsername } from "../utils/validate/validateUsername";
+// import axios from "axios";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -17,7 +18,7 @@ function Login() {
     else setShowPassword(true);
   }
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
     if (
       validateUsername(username) === "username hop le" &&
@@ -25,6 +26,10 @@ function Login() {
     ) {
       setErrorUsername("");
       setErrorPassword("");
+      // await axios.post("http://localhost:3000/", {
+      //   username: username,
+      //   password: password,
+      // });
       navigate("/admin/dashboard");
       return;
     }
@@ -41,12 +46,18 @@ function Login() {
             <Link to={"/"} className="pic-button">
               <div className="pic-button-name">Back to website</div>
               <img
+                data-testid="back-arrow"
                 src="/arrow-long.svg"
                 alt="arrow-long"
                 className="pic-button-ico"
               />
             </Link>
-            <img src="/pic-img.svg" alt="pic-img" className="pic-img" />
+            <img
+              data-testid="back-img"
+              src="/pic-img.svg"
+              alt="pic-img"
+              className="pic-img"
+            />
           </div>
 
           <form className="form">
