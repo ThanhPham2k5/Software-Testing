@@ -39,7 +39,7 @@ function Dashboard() {
     <>
       <div className="dashboard">
         <div className="Header">
-          <Link to={"/"} className="brand">
+          <Link to={"/"} className="Brand">
             <img src="/logo.svg" alt="logo" className="logo-img" />
 
             <div className="brand-name">gin</div>
@@ -88,7 +88,7 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="body">
+        <div className="Body">
           <div className="filters">
             <div className="filters-name">Filters</div>
 
@@ -225,9 +225,242 @@ function Dashboard() {
           </div>
 
           <div className="content">
-            <div className="create-button"></div>
+            <div className="create-button">
+              <img
+                src="/create-button-ico.svg"
+                alt="create-button-ico"
+                className="create-button-ico"
+              />
 
-            <div className="card-list"></div>
+              <div className="create-button-name">New Book</div>
+            </div>
+
+            <div className="card-body">
+              {/* can be replaced with create or view book */}
+              <div className="card-list">
+                {/* example */}
+                <div className="card">
+                  <div className="card-picture">
+                    <img
+                      src="/card-picture-img-default.svg"
+                      alt="card-picture-img"
+                      className="card-picture-img"
+                    />
+                  </div>
+
+                  <div className="card-info">
+                    <div className="card-price">$1,100</div>
+
+                    <div className="card-name">Đắc Nhân Tâm</div>
+
+                    <div className="card-quantity">
+                      <img
+                        src="/card-quantity-ico-black.svg"
+                        alt="card-quantity-ico"
+                        className="card-quantity-ico"
+                      />
+
+                      <div className="card-quantity-number">120</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* fake prods */}
+                <div className="card">
+                  <div className="card-picture">
+                    <img
+                      src="/card-picture-img-default.svg"
+                      alt="card-picture-img"
+                      className="card-picture-img"
+                    />
+                  </div>
+
+                  <div className="card-info">
+                    <div className="card-price">$1,100</div>
+
+                    <div className="card-name">Đắc Nhân Tâm</div>
+
+                    <div className="card-quantity">
+                      <img
+                        src="/card-quantity-ico-black.svg"
+                        alt="card-quantity-ico"
+                        className="card-quantity-ico"
+                      />
+
+                      <div className="card-quantity-number">120</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div className="card-picture">
+                    <img
+                      src="/card-picture-img-default.svg"
+                      alt="card-picture-img"
+                      className="card-picture-img"
+                    />
+                  </div>
+
+                  <div className="card-info">
+                    <div className="card-price">$1,100</div>
+
+                    <div className="card-name">Đắc Nhân Tâm</div>
+
+                    <div className="card-quantity">
+                      <img
+                        src="/card-quantity-ico-black.svg"
+                        alt="card-quantity-ico"
+                        className="card-quantity-ico"
+                      />
+
+                      <div className="card-quantity-number">120</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div className="card-picture">
+                    <img
+                      src="/card-picture-img-default.svg"
+                      alt="card-picture-img"
+                      className="card-picture-img"
+                    />
+                  </div>
+
+                  <div className="card-info">
+                    <div className="card-price">$1,100</div>
+
+                    <div className="card-name">Đắc Nhân Tâm</div>
+
+                    <div className="card-quantity">
+                      <img
+                        src="/card-quantity-ico-black.svg"
+                        alt="card-quantity-ico"
+                        className="card-quantity-ico"
+                      />
+
+                      <div className="card-quantity-number">120</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div className="card-picture">
+                    <img
+                      src="/card-picture-img-default.svg"
+                      alt="card-picture-img"
+                      className="card-picture-img"
+                    />
+                  </div>
+
+                  <div className="card-info">
+                    <div className="card-price">$1,100</div>
+
+                    <div className="card-name">Đắc Nhân Tâm</div>
+
+                    <div className="card-quantity">
+                      <img
+                        src="/card-quantity-ico-black.svg"
+                        alt="card-quantity-ico"
+                        className="card-quantity-ico"
+                      />
+
+                      <div className="card-quantity-number">120</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div className="card-picture">
+                    <img
+                      src="/card-picture-img-default.svg"
+                      alt="card-picture-img"
+                      className="card-picture-img"
+                    />
+                  </div>
+
+                  <div className="card-info">
+                    <div className="card-price">$1,100</div>
+
+                    <div className="card-name">Đắc Nhân Tâm</div>
+
+                    <div className="card-quantity">
+                      <img
+                        src="/card-quantity-ico-black.svg"
+                        alt="card-quantity-ico"
+                        className="card-quantity-ico"
+                      />
+
+                      <div className="card-quantity-number">120</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div className="card-picture">
+                    <img
+                      src="/card-picture-img-default.svg"
+                      alt="card-picture-img"
+                      className="card-picture-img"
+                    />
+                  </div>
+
+                  <div className="card-info">
+                    <div className="card-price">$1,100</div>
+
+                    <div className="card-name">Đắc Nhân Tâm</div>
+
+                    <div className="card-quantity">
+                      <img
+                        src="/card-quantity-ico-black.svg"
+                        alt="card-quantity-ico"
+                        className="card-quantity-ico"
+                      />
+
+                      <div className="card-quantity-number">120</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div className="card-picture">
+                    <img
+                      src="/card-picture-img-default.svg"
+                      alt="card-picture-img"
+                      className="card-picture-img"
+                    />
+                  </div>
+
+                  <div className="card-info">
+                    <div className="card-price">$1,100</div>
+
+                    <div className="card-name">Đắc Nhân Tâm</div>
+
+                    <div className="card-quantity">
+                      <img
+                        src="/card-quantity-ico-black.svg"
+                        alt="card-quantity-ico"
+                        className="card-quantity-ico"
+                      />
+
+                      <div className="card-quantity-number">120</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card-page">
+                <div className="prev-page page-selected">1</div>
+
+                <div className="current-page">2</div>
+
+                <div className="next-page">3</div>
+
+                <input type="text" className="input-page" placeholder="..." />
+
+                <div className="final-page">36</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
