@@ -6,6 +6,10 @@ import DetailBook from "../components/DetailBook";
 import ModifyBook from "../components/ModifyBook";
 
 function Dashboard() {
+  useEffect(() => {
+    document.title = "Dashboard | Flogin";
+  }, []);
+
   const [userClicked, setUserClicked] = useState(false);
   const [showCategory, setShowCategory] = useState(true);
   const [showPrice, setShowPrice] = useState(true);

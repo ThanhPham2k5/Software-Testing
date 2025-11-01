@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/pages/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
+  useEffect(() => {
+    document.title = "Login | Flogin";
+  }, []);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
