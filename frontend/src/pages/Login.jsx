@@ -3,7 +3,7 @@ import "../styles/pages/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { validatePassword } from "../utils/validate/validatePassword";
 import { validateUsername } from "../utils/validate/validateUsername";
-// import axios from "axios";
+import axios from "axios";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -11,6 +11,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorUsername, setErrorUsername] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
+  const [apiMessage, setApiMessage] = useState("");
   const navigate = useNavigate();
 
   function seenPassword() {
@@ -26,16 +27,32 @@ function Login() {
     ) {
       setErrorUsername("");
       setErrorPassword("");
-      // await axios.post("http://localhost:3000/", {
-      //   username: username,
-      //   password: password,
-      // });
-      navigate("/admin/dashboard");
-      return;
-    }
 
-    setErrorUsername(validateUsername(username));
-    setErrorPassword(validatePassword(password));
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/auth/login",
+          {
+            username: username,
+            password: password,
+          }
+        );
+        setApiMessage(response.data.message);
+        navigate("/admin/dashboard");
+      } catch (error) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          setApiMessage(error.response.data.message);
+        } else {
+          setApiMessage("Da co loi xay ra, vui long thu lai");
+        }
+      }
+    } else {
+      setErrorUsername(validateUsername(username));
+      setErrorPassword(validatePassword(password));
+    }
   }
 
   return (
@@ -72,6 +89,7 @@ function Login() {
                 className="form-user-ico"
               />
               <input
+                data-testid="username-input"
                 type="text"
                 name="username"
                 id="username"
@@ -84,7 +102,9 @@ function Login() {
             </div>
 
             {errorUsername !== "username hop le" ? (
-              <div className="form-user-error">{errorUsername}</div>
+              <div className="form-user-error" data-testid="username-test">
+                {errorUsername}
+              </div>
             ) : null}
 
             <div className="form-pass">
@@ -96,6 +116,7 @@ function Login() {
               {showPassword ? (
                 <>
                   <input
+                    data-testid="password-input"
                     type="text"
                     name="password"
                     id="password"
@@ -114,6 +135,7 @@ function Login() {
               ) : (
                 <>
                   <input
+                    data-testid="password-input"
                     type="password"
                     name="password"
                     id="password"
@@ -133,12 +155,20 @@ function Login() {
             </div>
 
             {errorPassword !== "password hop le" ? (
-              <div className="form-pass-error">{errorPassword}</div>
+              <div className="form-pass-error" data-testid="password-test">
+                {errorPassword}
+              </div>
             ) : null}
 
-            <button className="form-button" onClick={(e) => onSubmit(e)}>
+            <button
+              className="form-button"
+              data-testid="form-button"
+              onClick={(e) => onSubmit(e)}
+            >
               <div className="form-button-name">Get Started</div>
             </button>
+
+            {apiMessage && <p data-testid="api-message">{apiMessage}</p>}
           </form>
         </div>
       </div>

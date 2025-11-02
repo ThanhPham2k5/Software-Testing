@@ -17,6 +17,7 @@ public class AuthController {
         this.service = service;
     }
 
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO account){
         LoginResponseDTO responseAccount = service.login(account);
