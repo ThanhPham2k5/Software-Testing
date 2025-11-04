@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "../styles/pages/Login.css";
 import { Link, useNavigate } from "react-router-dom";
-import { validatePassword } from "../utils/validate/validatePassword";
-import { validateUsername } from "../utils/validate/validateUsername";
+import { validatePassword } from "../utils/validateLogin/validatePassword";
+import { validateUsername } from "../utils/validateLogin/validateUsername";
 import axios from "axios";
 
 function Login() {
@@ -168,7 +168,11 @@ function Login() {
               <div className="form-button-name">Get Started</div>
             </button>
 
-            {apiMessage && <p data-testid="api-message">{apiMessage}</p>}
+            {apiMessage ? (
+              <div className="form-pass-error" data-testid="api-message">
+                {apiMessage}
+              </div>
+            ) : null}
           </form>
         </div>
       </div>

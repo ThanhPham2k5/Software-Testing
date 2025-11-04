@@ -1,11 +1,11 @@
 import { useState } from "react";
 import "../styles/components/Createbook.css";
 
-function ModifyBook({ checkModify }) {
-  const [valueName, setValueName] = useState("");
-  const [valuePrice, setValuePrice] = useState("");
-  const [valueQuantity, setValueQuantity] = useState("");
-  const [valueDescription, setValueDescription] = useState("");
+function ModifyBook({ product, checkModify }) {
+  const [valueName, setValueName] = useState(product.name);
+  const [valuePrice, setValuePrice] = useState(product.price);
+  const [valueQuantity, setValueQuantity] = useState(product.quantity);
+  const [valueDescription, setValueDescription] = useState(product.description);
 
   const [validName, setValidName] = useState(true);
   const [validPrice, setValidPrice] = useState(true);
@@ -104,17 +104,26 @@ function ModifyBook({ checkModify }) {
                   id="category"
                   name="category"
                   className="category-select"
+                  value={product.category}
                 >
-                  <option value="comic" className="category-opt" selected>
+                  <option value="COMIC" className="category-opt">
                     Comic
                   </option>
 
-                  <option value="manga" className="category-opt">
+                  <option value="MANGA" className="category-opt">
                     Manga
                   </option>
 
-                  <option value="novel" className="category-opt">
+                  <option value="NOVEL" className="category-opt">
                     Novel
+                  </option>
+
+                  <option value="NOTEBOOK" className="category-opt">
+                    Notebook
+                  </option>
+
+                  <option value="ROMANCE" className="category-opt">
+                    Romance
                   </option>
                 </select>
               </div>
@@ -163,16 +172,16 @@ function ModifyBook({ checkModify }) {
 
             <div className="picture-box">
               {/* first state: no img */}
-              <div className="picture-add">
+              {/* <div className="picture-add">
                 <img
                   src="/picture-add-ico.svg"
                   alt="picture-add-ico"
                   className="picture-add-ico"
                 />
-              </div>
+              </div> */}
 
               {/* second state: have an img */}
-              {/* <img
+              <img
                 src="/card-picture-img-default.svg"
                 alt="picture-img"
                 className="Picture-img"
@@ -184,7 +193,7 @@ function ModifyBook({ checkModify }) {
                   alt="picture-modify-ico"
                   className="picture-modify-ico"
                 />
-              </div> */}
+              </div>
             </div>
           </div>
         </div>

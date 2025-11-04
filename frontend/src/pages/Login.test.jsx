@@ -156,16 +156,16 @@ describe("Test error handling va success message", () => {
   });
 
   it("Test hien thi thong bao khi API tra ve thanh cong", async () => {
-    const apiError = {
+    const apiSuccess = {
       response: {
         data: {
-          isStatus: false,
+          isStatus: true,
           message: "Dang nhap thanh cong",
-          token: null,
+          token: "token123",
         },
       },
     };
-    axios.post.mockRejectedValue(apiError);
+    axios.post.mockRejectedValue(apiSuccess);
 
     render(
       <MemoryRouter>

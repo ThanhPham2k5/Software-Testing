@@ -389,7 +389,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   border-radius: 16px;
   box-shadow: 4px 4px 4px 0 rgb(0, 0, 0, 0.1);
