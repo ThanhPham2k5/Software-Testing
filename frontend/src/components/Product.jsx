@@ -1,6 +1,10 @@
 export default function Product({ product, setSelectedProductId }) {
   return (
-    <div className="card" onClick={() => setSelectedProductId(product.id)}>
+    <div
+      className="card"
+      onClick={() => setSelectedProductId(product.id)}
+      data-testid="product-container"
+    >
       <div className="card-picture">
         <img
           src="/card-picture-img-default.svg"

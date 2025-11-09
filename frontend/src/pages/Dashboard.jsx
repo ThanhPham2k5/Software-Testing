@@ -364,12 +364,15 @@ function Dashboard() {
               ) : selectedProductId !== null ? (
                 <>
                   <DetailBook
+                    products={products}
                     product={selectedProduct}
                     checkShow={() => setSelectedProductId(null)}
                     checkModify={setModifyButton}
                     checkDelete={() =>
                       setDeleteButton((prevValue) => !prevValue)
                     }
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
                   ></DetailBook>
                 </>
               ) : null}
@@ -379,49 +382,87 @@ function Dashboard() {
                     products={products}
                     setSelectedProductId={setSelectedProductId}
                   />
-                  <div className="card-page">
-                    <div
-                      className={`page-number ${
-                        currentPage === page1 ? "page-selected" : ""
-                      } prev-page`}
-                      onClick={() => handlePageClick(page1)}
-                    >
-                      {page1}
+                  {totalPages > 3 ? (
+                    <div className="card-page">
+                      <div
+                        className={`page-number ${
+                          currentPage === page1 ? "page-selected" : ""
+                        } prev-page`}
+                        onClick={() => handlePageClick(page1)}
+                      >
+                        {page1}
+                      </div>
+                      <div
+                        className={`page-number ${
+                          currentPage === page2 ? "page-selected" : ""
+                        } current-page`}
+                        onClick={() => handlePageClick(page2)}
+                      >
+                        {page2}
+                      </div>
+                      <div
+                        className={`page-number ${
+                          currentPage === page3 ? "page-selected" : ""
+                        } next-page`}
+                        onClick={() => handlePageClick(page3)}
+                      >
+                        {page3}
+                      </div>
+                      <input
+                        type="text"
+                        className="input-page"
+                        placeholder="..."
+                      />
+                      <div
+                        className={`page-number ${
+                          currentPage === totalPages ? "page-selected" : ""
+                        } final-page`}
+                        onClick={() => handlePageClick(totalPages)}
+                      >
+                        {totalPages}
+                      </div>
                     </div>
+                  ) : (
+                    <div className="card-page">
+                      {totalPages == 1 ? (
+                        <div
+                          className={
+                            currentPage === 1
+                              ? "page-selected prev-page"
+                              : "prev-page"
+                          }
+                          onClick={() => handlePageClick(1)}
+                        >
+                          1
+                        </div>
+                      ) : null}
 
-                    <div
-                      className={`page-number ${
-                        currentPage === page2 ? "page-selected" : ""
-                      } current-page`}
-                      onClick={() => handlePageClick(page2)}
-                    >
-                      {page2}
+                      {totalPages == 2 ? (
+                        <div
+                          className={
+                            currentPage === 2
+                              ? "page-selected current-page"
+                              : "current-page"
+                          }
+                          onClick={() => handlePageClick(2)}
+                        >
+                          2
+                        </div>
+                      ) : null}
+                      {totalPages == 3 ? (
+                        <div
+                          className={
+                            currentPage === 3
+                              ? "page-selected next-page"
+                              : "next-page"
+                          }
+                          onClick={() => handlePageClick(3)}
+                        >
+                          3
+                        </div>
+                      ) : null}
                     </div>
-
-                    <div
-                      className={`page-number ${
-                        currentPage === page3 ? "page-selected" : ""
-                      } next-page`}
-                      onClick={() => handlePageClick(page3)}
-                    >
-                      {page3}
-                    </div>
-
-                    <input
-                      type="text"
-                      className="input-page"
-                      placeholder="..."
-                    />
-
-                    <div
-                      className={`page-number ${
-                        currentPage === totalPages ? "page-selected" : ""
-                      } final-page`}
-                      onClick={() => handlePageClick(totalPages)}
-                    >
-                      {totalPages}
-                    </div>
-                  </div>
+                  )}
                 </>
               ) : null}
             </div>

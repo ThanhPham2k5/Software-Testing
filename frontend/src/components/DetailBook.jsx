@@ -1,9 +1,22 @@
 import "../styles/components/DetailBook.css";
 import axios from "axios";
 
-function DetailBook({ product, checkShow, checkModify, checkDelete }) {
+function DetailBook({
+  product,
+  checkShow,
+  checkModify,
+  checkDelete,
+  currentPage,
+  setCurrentPage,
+  products,
+}) {
   async function deleteButton() {
     await axios.delete(`http://localhost:8080/api/products/${product.id}`);
+
+    if (products.length === 1 && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+
     checkShow();
     checkDelete();
   }

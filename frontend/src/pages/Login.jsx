@@ -5,7 +5,7 @@ import { validatePassword } from "../utils/validateLogin/validatePassword";
 import { validateUsername } from "../utils/validateLogin/validateUsername";
 import axios from "axios";
 
-function Login() {
+function Login({ setToken }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -36,6 +36,7 @@ function Login() {
             password: password,
           }
         );
+        setToken(response.data.token);
         setApiMessage(response.data.message);
         navigate("/admin/dashboard");
       } catch (error) {
