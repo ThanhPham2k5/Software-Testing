@@ -1,4 +1,6 @@
 export default function Product({ product, setSelectedProductId }) {
+  const imageUrl = `data:image/jpeg;base64,${product.imgBase64}`;
+
   return (
     <div
       className="card"
@@ -7,7 +9,7 @@ export default function Product({ product, setSelectedProductId }) {
     >
       <div className="card-picture">
         <img
-          src="/card-picture-img-default.svg"
+          src={imageUrl}
           alt="card-picture-img"
           className="card-picture-img"
         />

@@ -17,8 +17,25 @@ public class ProductDTO {
 
     }
 
-    public ProductDTO(long id, String name, double price, int quantity, String description, ProductEntity.Category category) {
+    public ProductDTO(long id, String name, double price, int quantity, String description, ProductEntity.Category category, String imgBase64) {
         this.id = id;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+        this.category = category;
+        this.imgBase64 = imgBase64;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public ProductDTO(String name, double price, int quantity, String description, ProductEntity.Category category) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
@@ -32,14 +49,6 @@ public class ProductDTO {
 
     public void setCategory(ProductEntity.Category category) {
         this.category = category;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {

@@ -5,15 +5,11 @@ import com.flogin.entity.ProductEntity;
 import com.flogin.helper.ProductMapper;
 import com.flogin.repository.ProductRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 
 @Service
 public class ProductService {
@@ -24,6 +20,7 @@ public class ProductService {
     }
 
     public ProductDTO createProduct(ProductDTO dto){
+        validateProduct(dto);
         ProductEntity entity = ProductMapper.toEntity(dto);
         entity.setDeleted(false);
         return ProductMapper.toDTO(repository.save(entity));
@@ -42,6 +39,7 @@ public class ProductService {
     }
 
     public ProductDTO updateProduct(long id, ProductDTO updated) {
+        validateProduct(updated);
         ProductDTO existing = getProduct(id);
         existing.setName(updated.getName());
         existing.setPrice(updated.getPrice());
@@ -51,6 +49,39 @@ public class ProductService {
         existing.setImgBase64(updated.getImgBase64());
         ProductEntity updatedEntity = repository.save(ProductMapper.toEntity(existing));
         return ProductMapper.toDTO(updatedEntity);
+    }
+
+    public void validateProduct(ProductDTO dto){
+        if(dto.getName() == null || dto.getName().isBlank())
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Product's name cannot be empty"
+            );
+
+        if(dto.getPrice() <= 0)
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Product's price can't be negative"
+            );
+
+        if(dto.getQuantity() < 0)
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Product's quantity can't be negative"
+            );
+
+        if(dto.getDescription() == null || dto.getDescription().isBlank())
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Product's description cannot be empty"
+            );
+
+        if(dto.getCategory().toString() == null)
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Product's category cannot be empty"
+            );
+
+        if(dto.getImgBase64() == null || dto.getImgBase64().isBlank())
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Image cannot be blank"
+            );
+
     }
 
     public void deleteProduct(long id) {
