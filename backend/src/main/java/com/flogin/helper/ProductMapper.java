@@ -9,6 +9,7 @@ public class ProductMapper {
 
     public static ProductDTO toDTO(ProductEntity entity) {
         ProductDTO dto = new ProductDTO();
+        dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setPrice(entity.getPrice());
         dto.setQuantity(entity.getQuantity());
@@ -22,6 +23,7 @@ public class ProductMapper {
 
     public static ProductEntity toEntity(ProductDTO dto) {
         ProductEntity entity = new ProductEntity();
+        entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setPrice(dto.getPrice());
         entity.setQuantity(dto.getQuantity());

@@ -112,8 +112,10 @@ describe("Test user interactions", () => {
     const checkShow = vi.fn();
     const checkModify = vi.fn();
     const checkDelete = vi.fn();
+    const products = vi.fn();
     render(
       <DetailBook
+        products={products}
         product={product}
         checkShow={checkShow}
         checkModify={checkModify}

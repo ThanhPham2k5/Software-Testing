@@ -26,6 +26,7 @@ public class ProductController {
         return ResponseEntity.ok(service.getProduct(id));
     }
 
+    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping
     public ResponseEntity<Page<ProductDTO>> getAll(
             @RequestParam(defaultValue = "0") int page,
@@ -48,6 +49,7 @@ public class ProductController {
 //    }
 
 
+    @CrossOrigin(origins = "http://localhost:5173")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id){
         service.deleteProduct(id);

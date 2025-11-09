@@ -72,6 +72,7 @@ function Dashboard() {
           size: 8,
         },
       });
+      console.log(response.data);
       setProducts(response.data.content);
       setTotalPages(response.data.totalPages);
     }
@@ -424,7 +425,7 @@ function Dashboard() {
                     </div>
                   ) : (
                     <div className="card-page">
-                      {totalPages == 1 ? (
+                      {totalPages >= 1 ? (
                         <div
                           className={
                             currentPage === 1
@@ -437,7 +438,7 @@ function Dashboard() {
                         </div>
                       ) : null}
 
-                      {totalPages == 2 ? (
+                      {totalPages >= 2 ? (
                         <div
                           className={
                             currentPage === 2
