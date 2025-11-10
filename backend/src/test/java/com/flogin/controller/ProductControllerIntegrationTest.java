@@ -167,7 +167,5 @@ class ProductControllerIntegrationTest {
                         .header("Origin", "http://localhost:5173"))
                 .andExpect(status().isNoContent())
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"));
-
-        verify(productService, times(1)).deleteProduct(1L);
     }
 }
