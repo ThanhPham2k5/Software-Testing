@@ -72,7 +72,7 @@ public class ProductService {
                     HttpStatus.BAD_REQUEST, "Product's description cannot be empty"
             );
 
-        if(dto.getCategory().toString() == null)
+        if(dto.getCategory() == null)
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Product's category cannot be empty"
             );
