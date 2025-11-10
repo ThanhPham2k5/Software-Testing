@@ -1,10 +1,30 @@
 import "../styles/components/DetailBook.css";
+import axios from "axios";
 
-function DetailBook({ checkShow, checkModify }) {
+function DetailBook({
+  product,
+  checkShow,
+  checkModify,
+  checkDelete,
+  currentPage,
+  setCurrentPage,
+  products,
+}) {
+  async function deleteButton() {
+    await axios.delete(`http://localhost:8080/api/products/${product.id}`);
+
+    if (products.length === 1 && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+
+    checkShow();
+    checkDelete();
+  }
+
   return (
     <>
       <div className="detail">
-        <div className="return-button" onClick={() => checkShow(false)}>
+        <div className="return-button" onClick={() => checkShow()}>
           <img
             src="/add-return-img.svg"
             alt="return-img"
@@ -17,6 +37,7 @@ function DetailBook({ checkShow, checkModify }) {
         <div className="detail-main">
           <div className="detail-picture">
             <img
+              data-testid="detail-img"
               src="/card-picture-img-default.svg"
               alt="detail-img"
               className="detail-img"
@@ -25,8 +46,8 @@ function DetailBook({ checkShow, checkModify }) {
 
           <div className="detail-body">
             <div className="detail-info">
-              <div className="detail-title">Đắc Nhân Tâm</div>
-              <div className="detail-price">$1,100</div>
+              <div className="detail-title">{product.name}</div>
+              <div className="detail-price">${product.price}</div>
               <div className="detail-quantity">
                 <img
                   src="/card-quantity-ico-black.svg"
@@ -34,14 +55,15 @@ function DetailBook({ checkShow, checkModify }) {
                   className="detail-quantity-ico"
                 />
 
-                <div className="detail-quantity-number">120</div>
+                <div className="detail-quantity-number">{product.quantity}</div>
               </div>
               <div className="detail-desc">Description:</div>
               <textarea
+                data-testid="desc-product"
                 name="desc"
                 id="desc"
                 className="detail-desc-area"
-                value="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                value={product.description}
                 readOnly
               ></textarea>
             </div>
@@ -57,7 +79,7 @@ function DetailBook({ checkShow, checkModify }) {
                 <div className="modify-button-text">Modify</div>
               </div>
 
-              <div className="delete-button">
+              <div className="delete-button" onClick={deleteButton}>
                 <img
                   src="/delete-button-ico.svg"
                   alt="delete-button-ico"

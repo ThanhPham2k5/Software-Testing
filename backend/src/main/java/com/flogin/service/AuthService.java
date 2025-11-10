@@ -1,6 +1,5 @@
 package com.flogin.service;
 
-import com.flogin.dto.AccountDTO;
 import com.flogin.dto.LoginRequestDTO;
 import com.flogin.dto.LoginResponseDTO;
 import com.flogin.entity.AccountEntity;
@@ -20,17 +19,30 @@ public class AuthService {
     }
 
     public LoginResponseDTO login(LoginRequestDTO request){
+        validateUsername(request.getUsername());
+        validatePassword(request.getPassword());
+
         Optional<AccountEntity> account = repository.findByUsername(request.getUsername());
         if(account.isEmpty()){
-            return new LoginResponseDTO(false,"Tai khoan khong ton tai",null);
+            return new LoginResponseDTO(false,"Username is incorrect",null);
         }
 
         AccountEntity foundAccount = account.get();
         boolean match = request.getPassword().equals(foundAccount.getPassword());
         if(!match){
-            return new LoginResponseDTO(false,"Mat khau khong dung",null);
+            return new LoginResponseDTO(false,"Password is incorrect",null);
         }
 
-        return new LoginResponseDTO(true,"Dang nhap thanh cong","token-123");
+        return new LoginResponseDTO(true,"Login successful","token-123");
+    }
+
+    public void validateUsername(String username){
+        if(username == null || username.isBlank())
+            throw new IllegalArgumentException("Username cannot be empty");
+    }
+
+    public void validatePassword(String password){
+        if(password == null || password.isBlank())
+            throw new IllegalArgumentException("Password cannot be empty");
     }
 }
