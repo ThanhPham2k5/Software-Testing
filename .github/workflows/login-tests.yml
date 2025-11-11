@@ -28,7 +28,11 @@ jobs:
       - name: Run Login Unit Tests with Vitest
         run: |
           cd frontend
-          npx vitest src/pages/Login.test.jsx src/utils/validateLogin/validateTest.test.js --reporter=junit
+          npx vitest \
+            src/pages/Login.test.jsx \
+            src/utils/validateLogin/validateTest.test.js \
+            --reporter=junit \
+            --outputFile=test-results/report.xml
         
       - name: Archive Test Reports
         if: always()
