@@ -1,0 +1,65 @@
+name: Product Tests CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-product:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm install
+          
+      - name: Run Frontend Product Tests (Vitest)
+        run: |
+          cd frontend
+          npx vitest \
+            src/utils/validateProduct/validateProduct.test.js \
+            src/components/ProductList.test.jsx \
+            src/components/DetailBook.test.jsx \
+            --reporter=junit \
+            --outputFile=test-results/report.xml
+            
+      - name: Setup Java 17 for Backend
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+          
+      - name: Run Backend Product Tests (Maven)
+        run: |
+          cd backend
+          chmod +x mvnw
+          ./mvnw clean test -Dtest=ProductServiceTest
+          
+      - name: Archive Frontend Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-product-reports
+          path: frontend/test-results/*.xml 
+          retention-days: 1
+          
+      - name: Archive Backend Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-product-reports
+          path: backend/target/surefire-reports/*.xml
+          retention-days: 1
