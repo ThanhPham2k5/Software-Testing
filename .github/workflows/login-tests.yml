@@ -44,6 +44,7 @@ jobs:
       - name: Run Backend Auth Tests (Maven)
         run: |
           cd backend
+          chmod +x mvnw
           ./mvnw clean test -Dtest=AuthControllerIntegrationTest,AuthControllerMockedTest,AuthServiceTest
           
       - name: Archive Frontend Test Reports
