@@ -31,16 +31,15 @@ jobs:
           npx vitest \
             src/pages/Login.test.jsx \
             src/utils/validateLogin/validateTest.test.js \
-            --reporter=junit \
-            --outputFile=test-results/report.xml
-        
-      - name: Archive Allure Test Data
+            --reporter=allure
+
+      - name: Generate Allure Report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: simple-elf/allure-report-action@v1.7 
         with:
-          name: allure-raw-data
-          path: frontend/allure-results
-          retention-days: 1
+          allure_results: frontend/allure-results
+          allure_report_path: allure-report
+          gh_pages: false
 
       - name: Upload Allure Report Artifact
         if: always()
