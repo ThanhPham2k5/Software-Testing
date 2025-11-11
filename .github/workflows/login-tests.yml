@@ -25,7 +25,7 @@ jobs:
           cd frontend
           npm install
           
-      - name: Run Login Unit Tests with Vitest
+      - name: Run Frontend Login Tests (Vitest)
         run: |
           cd frontend
           npx vitest \
@@ -33,11 +33,31 @@ jobs:
             src/utils/validateLogin/validateTest.test.js \
             --reporter=junit \
             --outputFile=test-results/report.xml
-        
-      - name: Archive Test Reports
+            
+      - name: Setup Java 17 for Backend
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+          
+      - name: Run Backend Auth Tests (Maven)
+        run: |
+          cd backend
+          ./mvnw clean test -Dtest=AuthControllerIntegrationTest,AuthControllerMockedTest,AuthServiceTest
+          
+      - name: Archive Frontend Test Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: login-test-reports
+          name: frontend-login-reports
           path: frontend/test-results/*.xml 
+          retention-days: 1
+          
+      - name: Archive Backend Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-auth-reports
+          path: backend/target/surefire-reports/*.xml
           retention-days: 1
