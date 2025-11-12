@@ -70,12 +70,15 @@ function Dashboard() {
   // San pham
   useEffect(() => {
     async function getProductData() {
-      const response = await axios.get("http://localhost:8080/api/products", {
-        params: {
-          page: currentPage - 1,
-          size: 8,
-        },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/products`,
+        {
+          params: {
+            page: currentPage - 1,
+            size: 8,
+          },
+        }
+      );
       console.log(response.data);
       setProducts(response.data.content);
       setTotalPages(response.data.totalPages);
