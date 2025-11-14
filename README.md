@@ -1,53 +1,117 @@
 # 📚 FloginFE_BE - Dashboard Quản lý Sản phẩm
 
-**Ứng dụng Web: React (Frontend) & Spring Boot (Backend) phát triển theo TDD.**
+**Hệ thống Web Full Stack (React + Spring Boot) phát triển theo Test-Driven Development (TDD)**
 
 ---
 
-## 💡 Giới thiệu Tổng quan
+## 1. 💡 Giới thiệu Dự án
 
-**FloginFE_BE** là một hệ thống web cơ bản được thiết kế để cung cấp một **Dashboard Quản lý Sản phẩm** (hoặc sách).
+**FloginFE_BE** là một ứng dụng web hoàn chỉnh, được xây dựng để cung cấp một **Dashboard Quản lý** Sản phẩm/Sách. Dự án này phục vụ cho Bài tập lớn môn **Kiểm Thử Phần Mềm**, tập trung áp dụng triệt để phương pháp **Test-Driven Development (TDD)** nhằm đảm bảo chất lượng và độ tin cậy của hệ thống.
 
-Dự án này là Bài tập lớn môn **Kiểm Thử Phần Mềm**, áp dụng phương pháp phát triển **Test-Driven Development (TDD)** xuyên suốt quá trình xây dựng, nhằm đảm bảo chất lượng và độ tin cậy cao của mã nguồn.
+### 1.1. Chức năng Chính
 
-### 🚀 Tính năng Cốt lõi
+Dự án bao gồm các module cốt lõi sau:
 
-- **Login & Authentication:** Hệ thống đăng nhập an toàn, bao gồm validation đầy đủ cho các trường nhập liệu.
-- **Product Management (CRUD):** Các thao tác cơ bản và nâng cao để Quản lý Sản phẩm (Tạo, Đọc, Cập nhật, Xóa).
+- **Chức năng Login & Authentication:** Hệ thống đăng nhập an toàn với cơ chế xác thực và **validation** đầu vào đầy đủ.
+- **Chức năng Product Management (CRUD):** Quản lý toàn diện dữ liệu sản phẩm/sách, hỗ trợ đầy đủ các thao tác **Create, Read, Update, Delete**.
 
----
+## 2. 🧪 Triết lý Phát triển: TDD
 
-## 🧪 Trọng tâm: Test-Driven Development (TDD)
+Dự án này tuân thủ nghiêm ngặt nguyên tắc **Test-Driven Development (TDD)**. Toàn bộ tính năng đều được phát triển theo chu trình **Red-Green-Refactor**:
 
-Dự án được phát triển theo chu trình **TDD (Red -> Green -> Refactor)**:
+1.  **RED (Viết Test Thất bại):** Luôn viết Test Case trước khi viết mã sản xuất.
+2.  **GREEN (Viết Mã):** Viết mã nguồn tối thiểu để làm Test Case vượt qua.
+3.  **REFACTOR (Tái cấu trúc):** Tối ưu hóa mã nguồn mà không làm Test thất bại.
 
-1.  **RED:** Viết Test thất bại trước khi viết mã sản xuất.
-2.  **GREEN:** Viết mã sản xuất tối thiểu để làm Test vượt qua.
-3.  **REFACTOR:** Tái cấu trúc mã nguồn để tối ưu mà không làm Test thất bại.
+Việc này đảm bảo rằng mỗi đơn vị (unit) và mỗi thành phần (component) đều được kiểm thử, dẫn đến mã nguồn sạch, ít lỗi và dễ dàng bảo trì.
 
-Phương pháp này giúp đảm bảo:
+## 3. 🛠 Công nghệ Sử dụng
 
-- Độ phủ mã (Code Coverage) cao.
-- Phát hiện lỗi sớm và cải thiện thiết kế.
-- Mã nguồn dễ bảo trì và mở rộng.
+### 3.1. Frontend (React Application)
 
-## 🛠 Công nghệ Sử dụng
+| Công nghệ                 | Phiên bản | Mô tả                                                         | Công cụ Kiểm thử           |
+| :------------------------ | :-------- | :------------------------------------------------------------ | :------------------------- |
+| **React**                 | 18+       | Framework JavaScript cho giao diện người dùng (UI).           |                            |
+| **Jest**                  | Mới nhất  | Testing Framework chính cho JavaScript.                       | **Component/Unit Testing** |
+| **React Testing Library** | Mới nhất  | Hỗ trợ kiểm thử các component theo cách người dùng tương tác. | **User Behavior Testing**  |
+| **Axios**                 | Mới nhất  | HTTP client để giao tiếp với API.                             |                            |
+| **CSS3**                  | Mới nhất  | Styling và animations.                                        |                            |
 
-### 1. Backend (Spring Boot 3.2+)
+### 3.2. Backend (Spring Boot API)
 
-| Công nghệ           | Phiên bản | Vai trò                                                   | Công cụ Kiểm thử                                  |
-| :------------------ | :-------- | :-------------------------------------------------------- | :------------------------------------------------ |
-| **Spring Boot**     | 3.2+      | Framework API chính.                                      | **JUnit 5, Mockito** (Unit & Integration Testing) |
-| **Java**            | 17+       | Ngôn ngữ chính.                                           |                                                   |
-| **JUnit 5**         | Mới nhất  | Testing framework tiêu chuẩn.                             |                                                   |
-| **Mockito**         | Mới nhất  | Mocking dependencies (Service, Repository) cho Unit Test. |                                                   |
-| **Spring Data JPA** | Mới nhất  | Thao tác Database.                                        |                                                   |
-| **Maven**           | Mới nhất  | Build tool.                                               |                                                   |
+| Công nghệ           | Phiên bản | Mô tả                                                    | Công cụ Kiểm thử               |
+| :------------------ | :-------- | :------------------------------------------------------- | :----------------------------- |
+| **Spring Boot**     | 3.2+      | Framework Java mạnh mẽ cho việc xây dựng API.            |                                |
+| **Java**            | 17+       | Ngôn ngữ lập trình chính.                                |                                |
+| **JUnit 5**         | Mới nhất  | Testing Framework tiêu chuẩn.                            | **Unit & Integration Testing** |
+| **Mockito**         | Mới nhất  | Dùng để **Mock** các dependencies (Service, Repository). | **Unit Testing**               |
+| **Spring Data JPA** | Mới nhất  | Xử lý các thao tác Database.                             |                                |
+| **Maven**           | Mới nhất  | Build tool.                                              |                                |
 
-### 2. Frontend (React 18+)
+## 4. 🏗 Cấu Trúc Dự án
 
-| Công nghệ | Phiên bản | Vai trò                      | Công cụ Kiểm thử                                    |
-| :-------- | :-------- | :--------------------------- | :-------------------------------------------------- |
-| **React** | 18+       | Framework JavaScript cho UI. | **Jest, React Testing Library** (Component Testing) |
+Cấu trúc dự án được chia rõ ràng thành hai phần: /frontend và /backend
 
-| \*\*React Testing
+## 5. 🚀 Hướng dẫn Chạy dự án
+
+### 5.1. Yêu cầu Tiên quyết
+
+- Java Development Kit (JDK) 17+
+- Node.js và npm (hoặc yarn)
+- Maven
+
+### 5.2. Chạy dự án cho Backend (Spring Boot)
+
+```bash
+# 1. Chuyển vào thư mục backend
+cd backend/
+
+# 2. Chạy dự án
+mvn spring-boot:run
+```
+
+### 5.3. Chạy dự án cho Frontend (React)
+
+```bash
+# 1. Chuyển vào thư mục frontend
+cd frontend/
+
+# 2. Cài đặt dependencies (nếu chưa cài)
+npm install
+
+# 3. Chạy dự án
+npm run dev
+```
+
+## 6. 🚀 Hướng dẫn Chạy và Kiểm thử
+
+### 6.1. Yêu cầu Tiên quyết
+
+- Java Development Kit (JDK) 17+
+- Node.js và npm (hoặc yarn)
+- Maven
+
+### 6.2. Chạy Tests cho Backend (Spring Boot)
+
+Thực thi tất cả các **Unit** và **Integration Tests** đã viết bằng **JUnit 6** và **Mockito**:
+
+```bash
+# 1. Chuyển vào thư mục backend
+cd backend/
+
+# 2. Thực thi tất cả các Test Cases
+mvn test
+```
+
+### 6.3. Chạy Tests cho Frontend (React)
+
+```bash
+# 1. Chuyển vào thư mục frontend
+cd frontend/
+
+# 2. Cài đặt dependencies (nếu chưa cài)
+npm install
+
+# 3. Thực thi các Test Cases
+npm test
+```
