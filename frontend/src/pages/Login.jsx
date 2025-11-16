@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/pages/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { validatePassword } from "../utils/validateLogin/validatePassword";
@@ -6,6 +6,10 @@ import { validateUsername } from "../utils/validateLogin/validateUsername";
 import axios from "axios";
 
 function Login({ setToken }) {
+  useEffect(() => {
+    document.title = "Login | Flogin";
+  }, []);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +34,7 @@ function Login({ setToken }) {
 
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/auth/login",
+          `${import.meta.env.VITE_API_URL}/api/auth/login`,
           {
             username: username,
             password: password,
