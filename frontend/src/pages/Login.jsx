@@ -26,8 +26,8 @@ function Login({ setToken }) {
   async function onSubmit(e) {
     e.preventDefault();
     if (
-      validateUsername(username) === "username hop le" &&
-      validatePassword(password) === "password hop le"
+      validateUsername(username) === "Username is valid." &&
+      validatePassword(password) === "Password is valid."
     ) {
       setErrorUsername("");
       setErrorPassword("");
@@ -50,8 +50,15 @@ function Login({ setToken }) {
           error.response.data.message
         ) {
           setApiMessage(error.response.data.message);
+          if (apiMessage === "Username is incorrect") {
+            setErrorUsername(apiMessage);
+          }
+          if (apiMessage === "Password is incorrect") {
+            setErrorPassword(apiMessage);
+          }
         } else {
-          setApiMessage("Da co loi xay ra, vui long thu lai");
+          setApiMessage("Internal Server ERROR.");
+          setErrorPassword(apiMessage);
         }
       }
     } else {
@@ -106,7 +113,7 @@ function Login({ setToken }) {
               />
             </div>
 
-            {errorUsername !== "username hop le" ? (
+            {errorUsername !== "Username is valid." ? (
               <div className="form-user-error" data-testid="username-test">
                 {errorUsername}
               </div>
@@ -159,7 +166,7 @@ function Login({ setToken }) {
               )}
             </div>
 
-            {errorPassword !== "password hop le" ? (
+            {errorPassword !== "Password is valid." ? (
               <div className="form-pass-error" data-testid="password-test">
                 {errorPassword}
               </div>
@@ -172,12 +179,6 @@ function Login({ setToken }) {
             >
               <div className="form-button-name">Get Started</div>
             </button>
-
-            {apiMessage ? (
-              <div className="form-pass-error" data-testid="api-message">
-                {apiMessage}
-              </div>
-            ) : null}
           </form>
         </div>
       </div>
