@@ -46,39 +46,26 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y k6
 
-      # Run k6 Load Login Performance Test and export HTML
+      # Run k6 Load Login Performance Test
       - name: Run k6 Load Login Performance Test
         working-directory: perf
         run: |
-          k6 run login-load.test.js --summary-export=login-load-summary.json
-          npx k6-to-html login-load-summary.json login-load-report.html
+          k6 run login-load.test.js
 
       # Run k6 Stress Login Performance Test
       - name: Run k6 Stress Login Performance Test
         working-directory: perf
         run: |
-          k6 run login-stress.test.js --summary-export=login-stress-summary.json
-          npx k6-to-html login-stress-summary.json login-stress-report.html
+          k6 run login-stress.test.js
 
       # Run k6 Load Product Performance Test
       - name: Run k6 Load Product Performance Test
         working-directory: perf
         run: |
-          k6 run product-load.test.js --summary-export=product-load-summary.json
-          npx k6-to-html product-load-summary.json product-load-report.html
+          k6 run product-load.test.js
 
       # Run k6 Stress Product Performance Test
       - name: Run k6 Stress Product Performance Test
         working-directory: perf
         run: |
-          k6 run product-stress.test.js --summary-export=product-stress-summary.json
-          npx k6-to-html product-stress-summary.json product-stress-report.html
-
-      # Upload HTML Performance Reports
-      - name: Upload Performance Reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: k6-html-reports
-          path: perf/*.html
-          retention-days: 1
+          k6 run product-stress.test.js
