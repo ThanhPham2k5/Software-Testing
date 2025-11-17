@@ -12,14 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
 
+      # Setup Java 17
       - name: Setup Java 17 for Backend
         uses: actions/setup-java@v4
         with:
@@ -27,44 +30,59 @@ jobs:
           java-version: "17"
           cache: "maven"
 
+      # Install frontend dependencies
       - name: Install dependencies
         run: |
           cd frontend
           npm install
 
+      # Install k6
       - name: Install k6 CLI
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl
+          sudo apt-get install -y curl gnupg
           curl -s https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
           sudo apt-get update
           sudo apt-get install -y k6
 
+      # Install k6-reporter for HTML reports
+      - name: Install k6-reporter
+        run: npm install -g k6-reporter
+
+      # Run k6 Load Login Performance Test
       - name: Run k6 Load Login Performance Test
+        working-directory: perf
         run: |
-          cd perf
-          k6 run login-load.test.js --out json=login-load-report.json
+          k6 run login-load.test.js --summary-export=login-load-summary.json
+          k6-reporter login-load-summary.json -o login-load-report.html
 
+      # Run k6 Stress Login Performance Test
       - name: Run k6 Stress Login Performance Test
+        working-directory: perf
         run: |
-          cd perf
-          k6 run login-stress.test.js --out json=login-stress-report.json
+          k6 run login-stress.test.js --summary-export=login-stress-summary.json
+          k6-reporter login-stress-summary.json -o login-stress-report.html
 
+      # Run k6 Load Product Performance Test
       - name: Run k6 Load Product Performance Test
+        working-directory: perf
         run: |
-          cd perf
-          k6 run product-load.test.js --out json=product-load-report.json
+          k6 run product-load.test.js --summary-export=product-load-summary.json
+          k6-reporter product-load-summary.json -o product-load-report.html
 
+      # Run k6 Stress Product Performance Test
       - name: Run k6 Stress Product Performance Test
+        working-directory: perf
         run: |
-          cd perf
-          k6 run product-stress.test.js --out json=product-stress-report.json
+          k6 run product-stress.test.js --summary-export=product-stress-summary.json
+          k6-reporter product-stress-summary.json -o product-stress-report.html
 
+      # Upload HTML Performance Reports
       - name: Upload Performance Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: k6-perf-reports
-          path: perf/*.json
+          name: k6-html-reports
+          path: perf/*.html
           retention-days: 1
