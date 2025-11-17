@@ -46,37 +46,33 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y k6
 
-      # Install k6-reporter for HTML reports
-      - name: Install k6-reporter
-        run: npm install -g k6-reporter
-
-      # Run k6 Load Login Performance Test
+      # Run k6 Load Login Performance Test and export HTML
       - name: Run k6 Load Login Performance Test
         working-directory: perf
         run: |
           k6 run login-load.test.js --summary-export=login-load-summary.json
-          k6-reporter login-load-summary.json -o login-load-report.html
+          npx k6-to-html login-load-summary.json login-load-report.html
 
       # Run k6 Stress Login Performance Test
       - name: Run k6 Stress Login Performance Test
         working-directory: perf
         run: |
           k6 run login-stress.test.js --summary-export=login-stress-summary.json
-          k6-reporter login-stress-summary.json -o login-stress-report.html
+          npx k6-to-html login-stress-summary.json login-stress-report.html
 
       # Run k6 Load Product Performance Test
       - name: Run k6 Load Product Performance Test
         working-directory: perf
         run: |
           k6 run product-load.test.js --summary-export=product-load-summary.json
-          k6-reporter product-load-summary.json -o product-load-report.html
+          npx k6-to-html product-load-summary.json product-load-report.html
 
       # Run k6 Stress Product Performance Test
       - name: Run k6 Stress Product Performance Test
         working-directory: perf
         run: |
           k6 run product-stress.test.js --summary-export=product-stress-summary.json
-          k6-reporter product-stress-summary.json -o product-stress-report.html
+          npx k6-to-html product-stress-summary.json product-stress-report.html
 
       # Upload HTML Performance Reports
       - name: Upload Performance Reports
