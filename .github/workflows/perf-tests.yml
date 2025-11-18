@@ -1,0 +1,71 @@
+name: Performance Tests CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  perf-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # Setup Java 17
+      - name: Setup Java 17 for Backend
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
+
+      # Install frontend dependencies
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm install
+
+      # Install k6
+      - name: Install k6 CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl gnupg
+          curl -s https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6
+
+      # Run k6 Load Login Performance Test
+      - name: Run k6 Load Login Performance Test
+        working-directory: perf
+        run: |
+          k6 run login-load.test.js
+
+      # Run k6 Stress Login Performance Test
+      - name: Run k6 Stress Login Performance Test
+        working-directory: perf
+        run: |
+          k6 run login-stress.test.js
+
+      # Run k6 Load Product Performance Test
+      - name: Run k6 Load Product Performance Test
+        working-directory: perf
+        run: |
+          k6 run product-load.test.js
+
+      # Run k6 Stress Product Performance Test
+      - name: Run k6 Stress Product Performance Test
+        working-directory: perf
+        run: |
+          k6 run product-stress.test.js
