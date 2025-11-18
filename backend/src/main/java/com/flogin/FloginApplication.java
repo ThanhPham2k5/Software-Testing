@@ -9,5 +9,4 @@ public class FloginApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FloginApplication.class, args);
 	}
-
 }

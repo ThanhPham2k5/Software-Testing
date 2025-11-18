@@ -15,8 +15,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
 @DisplayName("Login API Integration Tests")
@@ -43,8 +42,11 @@ class AuthControllerIntegrationTest {
 
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(request))
+                        .header("Origin", "http://localhost:5173"))
                 .andExpect(status().isOk()) // Mong đợi HTTP 200
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173")) //CORS
+                .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$.status").value(true))
                 .andExpect(jsonPath("$.message").value("Login successful"))
                 .andExpect(jsonPath("$.token").value("token-123"));
@@ -62,8 +64,11 @@ class AuthControllerIntegrationTest {
 
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(request))
+                        .header("Origin", "http://localhost:5173"))
                 .andExpect(status().isUnauthorized())
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173")) //CORS
+                .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$.status").value(false))
                 .andExpect(jsonPath("$.message").value("Password is incorrect"))
                 .andExpect(jsonPath("$.token").isEmpty());
@@ -81,8 +86,11 @@ class AuthControllerIntegrationTest {
 
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(request))
+                        .header("Origin", "http://localhost:5173"))
                 .andExpect(status().isUnauthorized())
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173")) //CORS
+                .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$.status").value(false))
                 .andExpect(jsonPath("$.message").value("Username is incorrect"))
                 .andExpect(jsonPath("$.token").isEmpty());

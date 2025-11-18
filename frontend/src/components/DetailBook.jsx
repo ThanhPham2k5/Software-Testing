@@ -11,7 +11,9 @@ function DetailBook({
   products,
 }) {
   async function deleteButton() {
-    await axios.delete(`http://localhost:8080/api/products/${product.id}`);
+    await axios.delete(
+      `${import.meta.env.VITE_API_URL}/api/products/${product.id}`
+    );
 
     if (products.length === 1 && currentPage > 1) {
       setCurrentPage(currentPage - 1);

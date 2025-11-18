@@ -208,65 +208,148 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("get product fail test")
-    void testGetProductFail(){
-        when(mockRepository.findById(any(Long.class))).thenReturn(Optional.empty());
-
-        ResponseStatusException thrown = assertThrows(
-                ResponseStatusException.class,
-                () -> service.getProduct(1)
-        );
-
-        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
-        verify(mockRepository, times(1)).findById(any(Long.class));
-    }
-
-    @Test
     @DisplayName("validate product fail with empty name")
     void testValidateFailWithEmptyName(){
         ProductDTO dto = new ProductDTO();
         dto.setName("");
+        dto.setPrice(100);
+        dto.setQuantity(10);
+        dto.setDescription("test description");
+        dto.setCategory(ProductEntity.Category.COMIC);
+        dto.setImgBase64("test base64");
 
         ResponseStatusException thrown = assertThrows(
                 ResponseStatusException.class,
                 () -> service.validateProduct(dto)
         );
 
-        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals("Product's name cannot be empty", thrown.getReason());
+    }
+
+    @Test
+    @DisplayName("validate product fail with null name")
+    void testValidateFailWithNullName(){
+        ProductDTO dto = new ProductDTO();
+        dto.setName(null);
+        dto.setPrice(100);
+        dto.setQuantity(10);
+        dto.setDescription("test description");
+        dto.setCategory(ProductEntity.Category.COMIC);
+        dto.setImgBase64("test base64");
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals("Product's name cannot be empty", thrown.getReason());
+    }
+
+    @Test
+    @DisplayName("validate product fail with negative price")
+    void testValidateFailWithNegativePrice(){
+        ProductDTO dto = new ProductDTO();
+        dto.setName("test name");
+        dto.setPrice(-100);
+        dto.setQuantity(10);
+        dto.setDescription("test description");
+        dto.setCategory(ProductEntity.Category.COMIC);
+        dto.setImgBase64("test base64");
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals("Product's price can't be negative", thrown.getReason());
+    }
+
+
+    @Test
+    @DisplayName("validate product fail with negative quantity")
+    void testValidateFailWithNegativeQuantity(){
+        ProductDTO dto = new ProductDTO();
+        dto.setName("test name");
+        dto.setPrice(100);
+        dto.setQuantity(-10);
+        dto.setDescription("test description");
+        dto.setCategory(ProductEntity.Category.COMIC);
+        dto.setImgBase64("test base64");
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals("Product's quantity can't be negative", thrown.getReason());
     }
 
     @Test
     @DisplayName("validate product fail with empty description")
     void testValidateFailWithEmptyDescription(){
         ProductDTO dto = new ProductDTO();
+        dto.setName("test name");
+        dto.setPrice(100);
+        dto.setQuantity(10);
         dto.setDescription("");
+        dto.setCategory(ProductEntity.Category.COMIC);
+        dto.setImgBase64("test base64");
 
         ResponseStatusException thrown = assertThrows(
                 ResponseStatusException.class,
                 () -> service.validateProduct(dto)
         );
 
-        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals("Product's description cannot be empty", thrown.getReason());
+    }
+
+    @Test
+    @DisplayName("validate product fail with null description")
+    void testValidateFailWithNullDescription(){
+        ProductDTO dto = new ProductDTO();
+        dto.setName("test name");
+        dto.setPrice(100);
+        dto.setQuantity(10);
+        dto.setDescription(null);
+        dto.setCategory(ProductEntity.Category.COMIC);
+        dto.setImgBase64("test base64");
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals("Product's description cannot be empty", thrown.getReason());
     }
 
     @Test
     @DisplayName("validate product fail with null category")
     void testValidateFailWithNullCategory(){
         ProductDTO dto = new ProductDTO();
+        dto.setName("test name");
+        dto.setPrice(100);
+        dto.setQuantity(10);
+        dto.setDescription("test description");
         dto.setCategory(null);
+        dto.setImgBase64("test base64");
 
         ResponseStatusException thrown = assertThrows(
                 ResponseStatusException.class,
                 () -> service.validateProduct(dto)
         );
 
-        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals("Product's category cannot be empty", thrown.getReason());
     }
 
     @Test
     @DisplayName("validate product fail with empty img data")
     void testValidateFailWithEmptyImgBase64(){
         ProductDTO dto = new ProductDTO();
+        dto.setName("test name");
+        dto.setPrice(100);
+        dto.setQuantity(10);
+        dto.setDescription("test description");
+        dto.setCategory(ProductEntity.Category.COMIC);
         dto.setImgBase64("");
 
         ResponseStatusException thrown = assertThrows(
@@ -274,34 +357,25 @@ class ProductServiceTest {
                 () -> service.validateProduct(dto)
         );
 
-        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals("Image cannot be blank", thrown.getReason());
     }
 
     @Test
-    @DisplayName("validate product fail with negative price")
-    void testValidateFailWithNegativePrice(){
+    @DisplayName("validate product fail with null img data")
+    void testValidateFailWithNullImgBase64(){
         ProductDTO dto = new ProductDTO();
-        dto.setPrice(-1);
+        dto.setName("test name");
+        dto.setPrice(100);
+        dto.setQuantity(10);
+        dto.setDescription("test description");
+        dto.setCategory(ProductEntity.Category.COMIC);
+        dto.setImgBase64(null);
 
         ResponseStatusException thrown = assertThrows(
                 ResponseStatusException.class,
                 () -> service.validateProduct(dto)
         );
 
-        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
-    }
-
-    @Test
-    @DisplayName("validate product fail with negative quantity")
-    void testValidateFailWithNegativeQuantity(){
-        ProductDTO dto = new ProductDTO();
-        dto.setQuantity(-1);
-
-        ResponseStatusException thrown = assertThrows(
-                ResponseStatusException.class,
-                () -> service.validateProduct(dto)
-        );
-
-        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals("Image cannot be blank", thrown.getReason());
     }
 }

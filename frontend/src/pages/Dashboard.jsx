@@ -10,6 +10,10 @@ import ProductList from "../components/ProductList";
 const ITEMS_PER_PAGE = 8;
 
 function Dashboard() {
+  useEffect(() => {
+    document.title = "Dashboard | Flogin";
+  }, []);
+
   const [products, setProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [userClicked, setUserClicked] = useState(false);
@@ -66,12 +70,15 @@ function Dashboard() {
   // San pham
   useEffect(() => {
     async function getProductData() {
-      const response = await axios.get("http://localhost:8080/api/products", {
-        params: {
-          page: currentPage - 1,
-          size: 8,
-        },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/products`,
+        {
+          params: {
+            page: currentPage - 1,
+            size: 8,
+          },
+        }
+      );
       console.log(response.data);
       setProducts(response.data.content);
       setTotalPages(response.data.totalPages);

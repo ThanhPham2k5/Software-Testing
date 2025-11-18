@@ -7,8 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("api/products")
+@RequestMapping("/api/products")
 public class ProductController {
     private final ProductService service;
 
@@ -21,12 +22,13 @@ public class ProductController {
         return ResponseEntity.ok(service.createProduct(dto));
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> get(@PathVariable long id){
         return ResponseEntity.ok(service.getProduct(id));
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
+
     @GetMapping
     public ResponseEntity<Page<ProductDTO>> getAll(
             @RequestParam(defaultValue = "0") int page,
@@ -34,22 +36,13 @@ public class ProductController {
         return ResponseEntity.ok(service.getAllProducts(page, size));
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> update(@PathVariable long id, @RequestBody ProductDTO dto){
         return ResponseEntity.ok(service.updateProduct(id, dto));
     }
 
-//    @PutMapping("/img/{id}")
-//    public ResponseEntity<ProductDTO> updateImg(
-//            @PathVariable long id,
-//            @RequestBody Map<String, String> body
-//    ) {
-//        String base64 = body.get("base64");
-//        return ResponseEntity.ok(service.updateImg(id, base64));
-//    }
 
-
-    @CrossOrigin(origins = "http://localhost:5173")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id){
         service.deleteProduct(id);
