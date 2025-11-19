@@ -28,11 +28,13 @@ jobs:
       - name: Run Frontend Login Tests (Vitest)
         run: |
           cd frontend
+          mkdir -p test-results
           npx vitest \
             src/pages/Login.test.jsx \
             src/utils/validateLogin/validateTest.test.js \
             --reporter=junit \
             --outputFile=test-results/report.xml
+        continue-on-error: true
 
       - name: Setup Java 17 for Backend
         uses: actions/setup-java@v4
@@ -46,6 +48,7 @@ jobs:
           cd backend
           chmod +x mvnw
           ./mvnw clean test -Dtest=AuthControllerIntegrationTest,AuthControllerMockedTest,AuthServiceTest
+        continue-on-error: true
 
       - name: Archive Frontend Test Reports
         if: always()

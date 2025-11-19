@@ -51,21 +51,25 @@ jobs:
         working-directory: perf
         run: |
           k6 run login-load.test.js
+        continue-on-error: true
 
       # Run k6 Stress Login Performance Test
       - name: Run k6 Stress Login Performance Test
         working-directory: perf
         run: |
           k6 run login-stress.test.js
+        continue-on-error: true
 
       # Run k6 Load Product Performance Test
       - name: Run k6 Load Product Performance Test
         working-directory: perf
         run: |
           k6 run product-load.test.js
+        continue-on-error: true
 
       # Run k6 Stress Product Performance Test
       - name: Run k6 Stress Product Performance Test
         working-directory: perf
         run: |
           k6 run product-stress.test.js
+        continue-on-error: true

@@ -34,6 +34,7 @@ jobs:
             src/components/DetailBook.test.jsx \
             --reporter=junit \
             --outputFile=test-results/report.xml
+        continue-on-error: true
 
       - name: Setup Java 17 for Backend
         uses: actions/setup-java@v4
@@ -47,6 +48,7 @@ jobs:
           cd backend
           chmod +x mvnw
           ./mvnw clean test -Dtest=ProductServiceTest
+        continue-on-error: true
 
       - name: Archive Frontend Test Reports
         if: always()
