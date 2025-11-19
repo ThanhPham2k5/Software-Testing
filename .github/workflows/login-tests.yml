@@ -68,14 +68,20 @@ jobs:
 
       - name: Run frontend
         run: |
-          cd frontend
-          npm run build
-          npm run preview &
+          cd frontendnpm 
+          run build
+          nohup npm run preview > preview.log 2>&1 &
+        env:
+          PORT: 4173
 
       - name: Run backend
         run: |
           cd backend
-          ./mvnw spring-boot:run &
+          nohup ./mvnw -q spring-boot:run > backend.log 2>&1 &
+          sleep 10
+          echo "--- BACKEND LOG START ---"
+          tail -n 100 backend.log
+          echo "--- BACKEND LOG END ---"
 
       - name: Wait for backend & frontend
         run: |
