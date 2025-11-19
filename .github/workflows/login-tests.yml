@@ -70,22 +70,18 @@ jobs:
         run: |
           cd frontend
           npm run build
-          nohup npm run preview > preview.log 2>&1 &
-        env:
-          PORT: 4173
+          nohup npm run preview -- --port 5173 > preview.log 2>&1 &
 
       - name: Run backend
         run: |
           cd backend
-          nohup ./mvnw -q spring-boot:run > backend.log 2>&1 &
+          nohup ./mvnw -q spring-boot:run -Dspring-boot.run.profiles=ci > backend.log 2>&1 &
           sleep 10
-          echo "--- BACKEND LOG START ---"
-          tail -n 100 backend.log
-          echo "--- BACKEND LOG END ---"
 
       - name: Wait for backend & frontend
         run: |
-          npx wait-on http://localhost:5173 http://localhost:8080/api/auth/health
+          npm install -g wait-on
+          wait-on http://localhost:5173 http://localhost:8080/api/auth/health
 
       - name: Run Login E2E Test (Cypress)
         run: |
