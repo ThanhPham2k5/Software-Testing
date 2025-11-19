@@ -69,9 +69,8 @@ jobs:
       - name: Run frontend
         run: |
           cd frontend
-          npm run dev &
-        env:
-          VITE_PORT: 5173
+          npm run build
+          npm run preview &
 
       - name: Run backend
         run: |
