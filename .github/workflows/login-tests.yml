@@ -2,29 +2,29 @@ name: Login Tests CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   test-login:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-      
+          node-version: "22"
+
       - name: Install frontend dependencies
         run: |
           cd frontend
           npm install
-          
+
       - name: Run Frontend Login Tests (Vitest)
         run: |
           cd frontend
@@ -33,28 +33,28 @@ jobs:
             src/utils/validateLogin/validateTest.test.js \
             --reporter=junit \
             --outputFile=test-results/report.xml
-            
+
       - name: Setup Java 17 for Backend
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven'
-          
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
+
       - name: Run Backend Auth Tests (Maven)
         run: |
           cd backend
           chmod +x mvnw
           ./mvnw clean test -Dtest=AuthControllerIntegrationTest,AuthControllerMockedTest,AuthServiceTest
-          
+
       - name: Archive Frontend Test Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: frontend-login-reports
-          path: frontend/test-results/*.xml 
+          path: frontend/test-results/*.xml
           retention-days: 1
-          
+
       - name: Archive Backend Test Reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -62,3 +62,24 @@ jobs:
           name: backend-auth-reports
           path: backend/target/surefire-reports/*.xml
           retention-days: 1
+
+      - name: Run frontend
+        run: |
+          cd frontend
+          npm run dev &
+        env:
+          VITE_PORT: 5173
+
+      - name: Run backend
+        run: |
+          cd backend
+          ./mvnw spring-boot:run &
+
+      - name: Wait for backend & frontend
+        run: |
+          npx wait-on http://localhost:5173 http://localhost:8080/api/auth/health
+
+      - name: Run Login E2E Test (Cypress)
+        run: |
+          cd frontend
+          npx cypress run --spec "cypress/e2e/login.e2e.spec.js"
