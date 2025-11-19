@@ -79,11 +79,6 @@ jobs:
           sleep 30
           tail -n 100 backend.log
 
-      - name: Wait for backend & frontend
-        run: |
-          npm install -g wait-on
-          wait-on http://localhost:5173 http://localhost:8080/api/auth/health
-
       - name: Run Login E2E Test (Cypress)
         run: |
           cd frontend
