@@ -19,12 +19,32 @@ class LoginPage{
         return cy.get('div[data-testid="api-message"]');
     }
 
+    getUsernameValidation(){
+        return cy.get('div[data-testid="username-test"]');
+    }
+
+    getPasswordValidation(){
+        return cy.get('div[data-testid="password-test"]');
+    }
+
+    getPasswordToggle(){
+        return cy.get('.form-eye-ico');
+    }
+
+    focusUser(){
+        this.getUserInput().focus();
+    }
+
+    focusPassword(){
+        this.getPasswordInput().focus();
+    }
+
     fillUser(username){
         this.getUserInput().type(username);
     }
 
     fillPassword(password){
-        this.getPasswordInput().type(password);
+        this.getPasswordInput().clear().type(password);
     }
 
     clickLogin() {
