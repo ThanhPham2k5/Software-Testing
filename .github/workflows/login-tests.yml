@@ -75,8 +75,9 @@ jobs:
       - name: Run backend
         run: |
           cd backend
-          nohup ./mvnw -q spring-boot:run -Dspring-boot.run.profiles=ci > backend.log 2>&1 &
+          nohup ./mvnw spring-boot:run -Dspring-boot.run.profiles=ci > backend.log 2>&1 &
           sleep 30
+          tail -n 100 backend.log
 
       - name: Wait for backend & frontend
         run: |
