@@ -76,7 +76,7 @@ jobs:
       - name: Run frontend
         run: |
           cd frontend
-          npm run build
+          npm run dev -- --host &
 
       - name: Run Login E2E Test (Cypress)
         run: |
