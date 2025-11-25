@@ -17,6 +17,7 @@ describe("Login E2E Tests", () => {
     LoginPage.fillUser("admin");
     LoginPage.fillPassword("@Admin123");
     LoginPage.clickLogin();
+
     cy.url({ timeout: 10000 }).should("include", "/admin/dashboard");
   });
 
