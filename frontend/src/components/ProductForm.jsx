@@ -43,7 +43,7 @@ export default function ProductForm() {
       setTotalPages(response.data.totalPages);
     }
     getProductData();
-  }, [currentPage, deleteButton]);
+  }, [currentPage, deleteButton, createButton]);
 
   useEffect(() => {
     // Trường hợp đặc biệt: Nếu tổng số trang quá ít (<= 4),
@@ -74,6 +74,17 @@ export default function ProductForm() {
 
   const selectedProduct = products.find((p) => p.id === selectedProductId);
 
+  const handleUpdateProduct = (updatedProduct) => {
+    const newProducts = products.map((p) =>
+      p.id === updatedProduct.id ? updatedProduct : p
+    );
+    setProducts(newProducts);
+  };
+
+  const handleAddProduct = (newProduct) => {
+    setProducts([...products, newProduct]);
+  };
+
   return (
     <Fragment>
       <div className="create-button" onClick={() => setCreateButton(true)}>
@@ -90,13 +101,17 @@ export default function ProductForm() {
         {/* can be replaced with create or view or modify book */}
         {createButton ? (
           <>
-            <CreateBook checkCreate={setCreateButton}></CreateBook>
+            <CreateBook
+              checkCreate={setCreateButton}
+              onAdd={handleAddProduct}
+            ></CreateBook>
           </>
         ) : modifyButton ? (
           <>
             <ModifyBook
               product={selectedProduct}
               checkModify={setModifyButton}
+              onSave={handleUpdateProduct}
             ></ModifyBook>
           </>
         ) : selectedProductId !== null ? (
