@@ -15,10 +15,9 @@ public class ProductEntity {
     private int quantity;
     private String description;
 
-//    @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
     @Lob
-    private byte[] imgData;
+    private String imgData;
 
 
     public enum Category{
@@ -69,7 +68,7 @@ public class ProductEntity {
         return category;
     }
 
-    public byte[] getImgData() {
+    public String getImgData() {
         return imgData;
     }
 
@@ -105,7 +104,7 @@ public class ProductEntity {
         this.category = category;
     }
 
-    public void setImgData(byte[] imgData) {
+    public void setImgData(String imgData) {
         this.imgData = imgData;
     }
 
