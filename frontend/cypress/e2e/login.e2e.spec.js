@@ -17,7 +17,7 @@ describe("Login E2E Tests", () => {
     LoginPage.fillUser("admin");
     LoginPage.fillPassword("@Admin123");
     LoginPage.clickLogin();
-    cy.url({ timeout: 20000 }).should("include", "/admin/dashboard");
+    cy.url({ timeout: 10000 }).should("include", "/admin/dashboard");
   });
 
   it('Should show validation message "Password cannot be empty." for empty password', () => {

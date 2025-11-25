@@ -66,18 +66,17 @@ jobs:
           path: backend/target/surefire-reports/*.xml
           retention-days: 1
 
+      - name: Run backend
+        run: |
+          cd backend
+          mvn clean install -DskipTests
+          mvn spring-boot:run &
+          sleep 10
+
       - name: Run frontend
         run: |
           cd frontend
           npm run build
-          nohup npm run preview -- --port 5173 > preview.log 2>&1 &
-
-      - name: Run backend
-        run: |
-          cd backend
-          nohup ./mvnw spring-boot:run -Dspring-boot.run.profiles=ci > backend.log 2>&1 &
-          sleep 30
-          tail -n 100 backend.log
 
       - name: Run Login E2E Test (Cypress)
         run: |
