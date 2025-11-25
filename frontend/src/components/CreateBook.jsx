@@ -159,7 +159,11 @@ function CreateBook({ checkCreate, onAdd }) {
               <div className="return-text">Return</div>
             </div>
 
-            <div className="header-done" onClick={handleSave}>
+            <div 
+              className="header-done" 
+              onClick={handleSave}
+              data-testid="doneBtn"
+            >
               <img
                 src="/add-done-img.svg"
                 alt="add-done-img"
@@ -284,6 +288,7 @@ function CreateBook({ checkCreate, onAdd }) {
 
             <div 
               className="picture-box"
+              data-testid="picture-box"
               onClick={handlOpenFileExplorer}
               >
               {/* first state: no img */}
@@ -322,6 +327,7 @@ function CreateBook({ checkCreate, onAdd }) {
               accept="image/*"
               ref={fileInputRef}
               style={{ display: "none" }}
+              data-testid="image-input"
               onChange={handleImageUpload}
             />
           </div>

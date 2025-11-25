@@ -162,7 +162,11 @@ function ModifyBook({ product, checkModify , onSave}) {
               <div className="return-text">Return</div>
             </div>
 
-            <div className="header-done" onClick={handleSave}>
+            <div 
+              className="header-done" 
+              onClick={handleSave}
+              data-testid="doneBtn"
+            >
               <img
                 src="/add-done-img.svg"
                 alt="add-done-img"
