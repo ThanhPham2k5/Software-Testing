@@ -1,15 +1,7 @@
 import "../styles/components/DetailBook.css";
 import axios from "axios";
 
-function DetailBook({
-  product,
-  checkShow,
-  checkModify,
-  checkDelete,
-  currentPage,
-  setCurrentPage,
-  products,
-}) {
+function DetailBook({ product, checkShow, checkModify, onDelete }) {
   const imageUrl = `data:image/jpeg;base64,${product.imgBase64}`;
 
   async function deleteButton() {
@@ -17,12 +9,7 @@ function DetailBook({
       `${import.meta.env.VITE_API_URL}/api/products/${product.id}`
     );
 
-    if (products.length === 1 && currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-
-    checkShow();
-    checkDelete();
+    onDelete(product.id);
   }
 
   return (

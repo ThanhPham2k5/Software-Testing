@@ -2,48 +2,32 @@ import { Fragment, useState, useEffect } from "react";
 import CreateBook from "../components/CreateBook";
 import DetailBook from "../components/DetailBook";
 import ModifyBook from "../components/ModifyBook";
-import axios from "axios";
 import ProductList from "../components/ProductList";
 
-export default function ProductForm() {
+export default function ProductForm({ products, setProducts }) {
   const [createButton, setCreateButton] = useState(false);
   const [modifyButton, setModifyButton] = useState(false);
-  const [products, setProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
-  const [deleteButton, setDeleteButton] = useState(false);
 
   // Phan trang
+  const ITEMS_PER_PAGE = 8;
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
   const [windowStart, setWindowStart] = useState(1);
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE) || 1;
+
+  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+  const currentProducts = products.slice(indexOfFirstItem, indexOfLastItem);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [products.length, products]);
+
   const handlePageClick = (pageNumber) => {
     if (pageNumber < 1 || pageNumber > totalPages) return;
 
     setCurrentPage(pageNumber);
   };
-
-  const page1 = windowStart;
-  const page2 = windowStart + 1;
-  const page3 = windowStart + 2;
-
-  // San pham
-  useEffect(() => {
-    async function getProductData() {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/products`,
-        {
-          params: {
-            page: currentPage - 1,
-            size: 8,
-          },
-        }
-      );
-      console.log(response.data);
-      setProducts(response.data.content);
-      setTotalPages(response.data.totalPages);
-    }
-    getProductData();
-  }, [currentPage, deleteButton, createButton]);
 
   useEffect(() => {
     // Trường hợp đặc biệt: Nếu tổng số trang quá ít (<= 4),
@@ -72,6 +56,10 @@ export default function ProductForm() {
     setWindowStart(newStart);
   }, [currentPage, totalPages]);
 
+  const page1 = windowStart;
+  const page2 = windowStart + 1;
+  const page3 = windowStart + 2;
+
   const selectedProduct = products.find((p) => p.id === selectedProductId);
 
   const handleUpdateProduct = (updatedProduct) => {
@@ -82,7 +70,14 @@ export default function ProductForm() {
   };
 
   const handleAddProduct = (newProduct) => {
-    setProducts([...products, newProduct]);
+    setProducts([newProduct, ...products]);
+  };
+
+  const handleDeleteProduct = (deletedId) => {
+    const newProducts = products.filter((p) => p.id !== deletedId);
+    setProducts(newProducts);
+
+    setSelectedProductId(null);
   };
 
   return (
@@ -117,20 +112,17 @@ export default function ProductForm() {
         ) : selectedProductId !== null ? (
           <>
             <DetailBook
-              products={products}
               product={selectedProduct}
               checkShow={() => setSelectedProductId(null)}
               checkModify={setModifyButton}
-              checkDelete={() => setDeleteButton((prevValue) => !prevValue)}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
+              onDelete={handleDeleteProduct}
             ></DetailBook>
           </>
         ) : null}
         {!createButton && selectedProductId === null && !modifyButton ? (
           <>
             <ProductList
-              products={products}
+              products={currentProducts}
               setSelectedProductId={setSelectedProductId}
             />
             {totalPages > 3 ? (

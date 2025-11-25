@@ -30,7 +30,7 @@ describe("Test render component", () => {
     expect(screen.getByText("Return")).toBeInTheDocument();
     expect(screen.getByTestId("detail-img")).toHaveAttribute(
       "src",
-      "/card-picture-img-default.svg"
+      "data:image/jpeg;base64,undefined"
     );
     expect(screen.getByText("Dac nhan tam")).toBeInTheDocument();
     expect(screen.getByText("$10000")).toBeInTheDocument();

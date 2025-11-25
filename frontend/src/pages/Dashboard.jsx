@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "../styles/pages/Dashboard.css";
 import { Link } from "react-router-dom";
 import ProductForm from "../components/ProductForm";
+import axios from "axios";
 
 function Dashboard({ setToken }) {
   useEffect(() => {
@@ -11,7 +12,34 @@ function Dashboard({ setToken }) {
   const [userClicked, setUserClicked] = useState(false);
   const [showCategory, setShowCategory] = useState(true);
   const [showPrice, setShowPrice] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [products, setProducts] = useState([]);
+  const [filterPrice, setFilterPrice] = useState("");
+  const [priceInput, setPriceInput] = useState("");
+  const [sortOrder, setSortOrder] = useState("DEFAULT");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const userRef = useRef(null);
+
+  useEffect(() => {
+    async function getAllProducts() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/products`,
+          {
+            params: {
+              page: 0,
+              size: 1000,
+            },
+          }
+        );
+        setProducts(response.data.content);
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+      }
+    }
+    getAllProducts();
+  }, []);
 
   function userClick() {
     setUserClicked((prev) => !prev);
@@ -40,6 +68,49 @@ function Dashboard({ setToken }) {
     setShowPrice((prev) => !prev);
   }
 
+  const handlePriceSearch = () => {
+    setFilterPrice(priceInput);
+  };
+
+  const handleSearch = () => {
+    setSearchTerm(searchInput);
+  };
+
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+
+  const getProcessedProducts = () => {
+    // 1. Lọc theo Category
+    let result =
+      selectedCategory === "ALL"
+        ? products
+        : products.filter((p) => p.category === selectedCategory);
+
+    // 2. Lọc theo GIÁ CHÍNH XÁC
+    if (filterPrice !== "") {
+      result = result.filter((p) => p.price === parseFloat(filterPrice));
+    }
+
+    // 3. LỌC THEO TÊN (SEARCH) <--- THÊM ĐOẠN NÀY
+    if (searchTerm !== "") {
+      result = result.filter((p) =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // 4. Sắp xếp (Sort)
+    if (sortOrder === "HIGH_TO_LOW") {
+      result = [...result].sort((a, b) => b.price - a.price);
+    } else if (sortOrder === "LOW_TO_HIGH") {
+      result = [...result].sort((a, b) => a.price - b.price);
+    }
+
+    return result;
+  };
+
+  const processedProducts = getProcessedProducts();
+
   return (
     <>
       <div className="dashboard">
@@ -62,9 +133,19 @@ function Dashboard({ setToken }) {
               name="searchBar"
               id="searchBar"
               className="search-bar-input"
+              placeholder="Search books..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
             />
 
-            <div className="search-bar-button">Search</div>
+            <div className="search-bar-button" onClick={handleSearch}>
+              Search
+            </div>
           </div>
 
           <div className="user" ref={userRef}>
@@ -129,7 +210,10 @@ function Dashboard({ setToken }) {
                         className="radio-button"
                         name="categories"
                         id="all"
+                        checked={selectedCategory === "ALL"}
                         defaultChecked
+                        value="ALL"
+                        onChange={handleCategoryChange}
                       />
                       All
                     </label>
@@ -140,6 +224,9 @@ function Dashboard({ setToken }) {
                         className="radio-button"
                         name="categories"
                         id="comic"
+                        value="COMIC"
+                        checked={selectedCategory === "COMIC"}
+                        onChange={handleCategoryChange}
                       />
                       Comic
                     </label>
@@ -150,6 +237,9 @@ function Dashboard({ setToken }) {
                         className="radio-button"
                         name="categories"
                         id="manga"
+                        value="MANGA"
+                        checked={selectedCategory === "MANGA"}
+                        onChange={handleCategoryChange}
                       />
                       Manga
                     </label>
@@ -160,6 +250,9 @@ function Dashboard({ setToken }) {
                         className="radio-button"
                         name="categories"
                         id="novel"
+                        value="NOVEL"
+                        checked={selectedCategory === "NOVEL"}
+                        onChange={handleCategoryChange}
                       />
                       Novel
                     </label>
@@ -170,8 +263,11 @@ function Dashboard({ setToken }) {
                         className="radio-button"
                         name="categories"
                         id="novel"
+                        value="ROMANCE"
+                        checked={selectedCategory === "ROMANCE"}
+                        onChange={handleCategoryChange}
                       />
-                      Novel
+                      Romance
                     </label>
 
                     <label className="radio">
@@ -180,28 +276,11 @@ function Dashboard({ setToken }) {
                         className="radio-button"
                         name="categories"
                         id="novel"
+                        value="NOTEBOOK"
+                        checked={selectedCategory === "NOTEBOOK"}
+                        onChange={handleCategoryChange}
                       />
-                      Novel
-                    </label>
-
-                    <label className="radio">
-                      <input
-                        type="radio"
-                        className="radio-button"
-                        name="categories"
-                        id="novel"
-                      />
-                      Novel
-                    </label>
-
-                    <label className="radio">
-                      <input
-                        type="radio"
-                        className="radio-button"
-                        name="categories"
-                        id="novel"
-                      />
-                      Novel
+                      Notebook
                     </label>
                   </div>
                 ) : null}
@@ -233,8 +312,9 @@ function Dashboard({ setToken }) {
                         type="radio"
                         className="radio-button"
                         name="prices"
-                        id="all"
-                        defaultChecked
+                        value="DEFAULT"
+                        checked={sortOrder === "DEFAULT"}
+                        onChange={(e) => setSortOrder(e.target.value)}
                       />
                       All
                     </label>
@@ -244,6 +324,9 @@ function Dashboard({ setToken }) {
                         className="radio-button"
                         name="prices"
                         id="high-to-low"
+                        value="HIGH_TO_LOW"
+                        checked={sortOrder === "HIGH_TO_LOW"}
+                        onChange={(e) => setSortOrder(e.target.value)}
                       />
                       Highest to lowest
                     </label>
@@ -253,6 +336,9 @@ function Dashboard({ setToken }) {
                         className="radio-button"
                         name="prices"
                         id="low-to-high"
+                        value="LOW_TO_HIGH"
+                        checked={sortOrder === "LOW_TO_HIGH"}
+                        onChange={(e) => setSortOrder(e.target.value)}
                       />
                       Lowest to highest
                     </label>
@@ -263,9 +349,21 @@ function Dashboard({ setToken }) {
                         name="price-input"
                         id="price-input"
                         className="price-input"
+                        placeholder="Enter price ..."
+                        value={priceInput}
+                        onChange={(e) => setPriceInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handlePriceSearch();
+                        }}
                       />
 
-                      <div className="price-typing-text">$</div>
+                      <div
+                        className="price-typing-text"
+                        onClick={handlePriceSearch}
+                        style={{ cursor: "pointer" }}
+                      >
+                        $
+                      </div>
                     </div>
                   </div>
                 ) : null}
@@ -274,7 +372,10 @@ function Dashboard({ setToken }) {
           </div>
 
           <div className="content">
-            <ProductForm />
+            <ProductForm
+              products={processedProducts}
+              setProducts={setProducts}
+            />
           </div>
         </div>
       </div>

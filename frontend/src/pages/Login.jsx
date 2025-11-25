@@ -15,7 +15,6 @@ function Login({ setToken }) {
   const [showPassword, setShowPassword] = useState(false);
   const [errorUsername, setErrorUsername] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
-  const [apiMessage, setApiMessage] = useState("");
   const navigate = useNavigate();
 
   function seenPassword() {
@@ -41,24 +40,17 @@ function Login({ setToken }) {
           }
         );
         setToken(response.data.token);
-        setApiMessage(response.data.message);
         navigate("/admin/dashboard");
       } catch (error) {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          setApiMessage(error.response.data.message);
-          if (apiMessage === "Username is incorrect") {
-            setErrorUsername(apiMessage);
-          }
-          if (apiMessage === "Password is incorrect") {
-            setErrorPassword(apiMessage);
-          }
-        } else {
-          setApiMessage("Internal Server ERROR.");
-          setErrorPassword(apiMessage);
+        const msg = error.response?.data?.message || "Internal Server ERROR.";
+
+        if (msg === "Username is incorrect") {
+          setErrorUsername(msg);
+        } else if (msg === "Password is incorrect") {
+          setErrorPassword(msg);
+        } else if (msg === "Login successful") {
+          setErrorUsername("");
+          setErrorPassword("");
         }
       }
     } else {

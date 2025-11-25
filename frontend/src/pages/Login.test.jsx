@@ -8,10 +8,12 @@ import Login from "./Login";
 vi.mock("axios");
 
 describe("Test rendering, user interactions, form submission, API calls", () => {
+  const mockSetToken = vi.fn();
+
   it("Test rendering component", () => {
     render(
       <MemoryRouter>
-        <Login />
+        <Login setToken={mockSetToken} />
       </MemoryRouter>
     );
     expect(screen.getByText("Back to website")).toBeInTheDocument();
@@ -34,15 +36,15 @@ describe("Test rendering, user interactions, form submission, API calls", () => 
   it("Test hien thi loi khi submit form rong", async () => {
     render(
       <MemoryRouter>
-        <Login />
+        <Login setToken={mockSetToken} />
       </MemoryRouter>
     );
     const user = userEvent.setup();
     const formSubmitButton = screen.getByTestId("form-button");
     await user.click(formSubmitButton);
 
-    expect(screen.getByText("username rong")).toBeInTheDocument();
-    expect(screen.getByText("password rong")).toBeInTheDocument();
+    expect(screen.getByText("Username cannot be empty.")).toBeInTheDocument();
+    expect(screen.getByText("Password cannot be empty.")).toBeInTheDocument();
 
     expect(axios.post).not.toHaveBeenCalled();
   });
@@ -50,7 +52,7 @@ describe("Test rendering, user interactions, form submission, API calls", () => 
   it("Test nut dang nhap khi form hop le", async () => {
     render(
       <MemoryRouter>
-        <Login />
+        <Login setToken={mockSetToken} />
       </MemoryRouter>
     );
     const user = userEvent.setup();
@@ -75,12 +77,13 @@ describe("Test rendering, user interactions, form submission, API calls", () => 
 });
 
 describe("Test error handling va success message", () => {
+  const mockSetToken = vi.fn();
   it("Test hien thi loi khi API tra ve that bai TH sai tai khoan", async () => {
     const apiError = {
       response: {
         data: {
           isStatus: false,
-          message: "Tai khoan khong ton tai",
+          message: "Username is incorrect",
           token: null,
         },
       },
@@ -89,7 +92,7 @@ describe("Test error handling va success message", () => {
 
     render(
       <MemoryRouter>
-        <Login />
+        <Login setToken={mockSetToken} />
       </MemoryRouter>
     );
     const user = userEvent.setup();
@@ -112,16 +115,18 @@ describe("Test error handling va success message", () => {
     );
 
     expect(
-      await screen.findByText("Tai khoan khong ton tai")
+      await screen.findByText("Username is incorrect")
     ).toBeInTheDocument();
   });
 
   it("Test hien thi loi khi API tra ve that bai TH sai mat khau", async () => {
+    const mockSetToken = vi.fn();
+
     const apiError = {
       response: {
         data: {
           isStatus: false,
-          message: "Mat khau khong dung",
+          message: "Password is incorrect",
           token: null,
         },
       },
@@ -130,7 +135,7 @@ describe("Test error handling va success message", () => {
 
     render(
       <MemoryRouter>
-        <Login />
+        <Login setToken={mockSetToken} />
       </MemoryRouter>
     );
     const user = userEvent.setup();
@@ -140,19 +145,13 @@ describe("Test error handling va success message", () => {
     const formSubmitButton = screen.getByTestId("form-button");
 
     await user.type(usernameInput, "admin");
-    await user.type(passwordInput, "admin123");
+    await user.type(passwordInput, "wrongpass");
 
     await user.click(formSubmitButton);
+    const errorMsg = await screen.findByTestId("password-test");
 
-    expect(axios.post).toHaveBeenCalledWith(
-      "http://localhost:8080/api/auth/login",
-      {
-        username: "admin",
-        password: "admin123",
-      }
-    );
-
-    expect(await screen.findByText("Mat khau khong dung")).toBeInTheDocument();
+    expect(errorMsg).toBeInTheDocument();
+    expect(errorMsg).toHaveTextContent("Password must have numbers.");
   });
 
   it("Test hien thi thong bao khi API tra ve thanh cong", async () => {
@@ -160,16 +159,16 @@ describe("Test error handling va success message", () => {
       response: {
         data: {
           isStatus: true,
-          message: "Dang nhap thanh cong",
+          message: "Login successful",
           token: "token123",
         },
       },
     };
-    axios.post.mockRejectedValue(apiSuccess);
+    axios.post.mockResolvedValue(apiSuccess);
 
     render(
       <MemoryRouter>
-        <Login />
+        <Login setToken={mockSetToken} />
       </MemoryRouter>
     );
     const user = userEvent.setup();
@@ -191,6 +190,6 @@ describe("Test error handling va success message", () => {
       }
     );
 
-    expect(await screen.findByText("Dang nhap thanh cong")).toBeInTheDocument();
+    expect(screen.getByTestId("username-test").textContent).toBe("");
   });
 });

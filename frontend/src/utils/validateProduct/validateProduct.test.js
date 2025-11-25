@@ -2,15 +2,17 @@ import { it, expect, describe } from "vitest";
 import { validateProduct } from "./validateProduct";
 
 describe("Product Validation Tests", () => {
-  it("Test product name", () => {
+  it("Test product name empty", () => {
     const product = {
       name: "",
       price: 10000,
       quantity: 10,
       description: "demo",
-      category: "Manga",
+      category: "MANGA",
     };
-    expect(validateProduct(product)).toBe("Ten san pham rong");
+    expect(validateProduct(product)).toEqual({
+      name: "Product name cannot be empty",
+    });
   });
 
   it("Test product price am", () => {
@@ -19,11 +21,11 @@ describe("Product Validation Tests", () => {
       price: -5,
       quantity: 10,
       description: "demo",
-      category: "Manga",
+      category: "MANGA",
     };
-    expect(validateProduct(product)).toBe(
-      "Gia san pham phai > 0 va <= 999999999"
-    );
+    expect(validateProduct(product)).toEqual({
+      price: "Product price must be between 0 and 999,999,999",
+    });
   });
 
   it("Test product price qua lon", () => {
@@ -32,11 +34,11 @@ describe("Product Validation Tests", () => {
       price: 1000000000,
       quantity: 10,
       description: "demo",
-      category: "Manga",
+      category: "MANGA",
     };
-    expect(validateProduct(product)).toBe(
-      "Gia san pham phai > 0 va <= 999999999"
-    );
+    expect(validateProduct(product)).toEqual({
+      price: "Product price must be between 0 and 999,999,999",
+    });
   });
 
   it("Test product quantity am", () => {
@@ -45,11 +47,11 @@ describe("Product Validation Tests", () => {
       price: 10000,
       quantity: -5,
       description: "demo",
-      category: "Manga",
+      category: "MANGA",
     };
-    expect(validateProduct(product)).toBe(
-      "So luong san pham phai >=0 va <= 99999"
-    );
+    expect(validateProduct(product)).toEqual({
+      quantity: "Product quantity must be between 0 and 99,999",
+    });
   });
 
   it("Test product quantity qua lon", () => {
@@ -58,11 +60,11 @@ describe("Product Validation Tests", () => {
       price: 10000,
       quantity: 100000,
       description: "demo",
-      category: "Manga",
+      category: "MANGA",
     };
-    expect(validateProduct(product)).toBe(
-      "So luong san pham phai >=0 va <= 99999"
-    );
+    expect(validateProduct(product)).toEqual({
+      quantity: "Product quantity must be between 0 and 99,999",
+    });
   });
 
   it("Test product description qua lon", () => {
@@ -72,12 +74,14 @@ describe("Product Validation Tests", () => {
       price: 10000,
       quantity: 10,
       description: longString,
-      category: "Manga",
+      category: "MANGA",
     };
-    expect(validateProduct(product)).toBe("Mo ta san pham qua 500 ki tu");
+    expect(validateProduct(product)).toEqual({
+      description: "Product description cannot exceed 500 characters",
+    });
   });
 
-  it("Test product category", () => {
+  it("Test product category invalid", () => {
     const product = {
       name: "Dac nhan tam",
       price: 10000,
@@ -85,9 +89,9 @@ describe("Product Validation Tests", () => {
       description: "demo",
       category: "Manga123",
     };
-    expect(validateProduct(product)).toBe(
-      "Loai sach phai la Manga hoac Comic hoac Novel"
-    );
+    expect(validateProduct(product)).toEqual({
+      category: "Invalid category",
+    });
   });
 
   it("Test product hop le", () => {
@@ -96,8 +100,8 @@ describe("Product Validation Tests", () => {
       price: 10000,
       quantity: 10,
       description: "demo",
-      category: "Manga",
+      category: "MANGA",
     };
-    expect(validateProduct(product)).toBe("San pham hop le");
+    expect(validateProduct(product)).toEqual({});
   });
 });
