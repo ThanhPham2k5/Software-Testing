@@ -13,13 +13,15 @@ describe("Login E2E Tests", () => {
     LoginPage.getPasswordToggle().should("be.visible");
   });
 
-  // it("Should login succesfully with valid credentials", () => {
-  //   LoginPage.fillUser("admin");
-  //   LoginPage.fillPassword("@Admin123");
-  //   LoginPage.clickLogin();
-
-  //   cy.url({ timeout: 10000 }).should("include", "/admin/dashboard");
-  // });
+  it("Should login succesfully with valid credentials", () => {
+    LoginPage.fillUser("admin");
+    LoginPage.fillPassword("@Admin123");
+    LoginPage.clickLogin();
+    cy.wait("@login", { timeout: 20000 })
+      .its("response.statusCode")
+      .should("eq", 200);
+    cy.url({ timeout: 10000 }).should("include", "/admin/dashboard");
+  });
 
   it('Should show validation message "Password cannot be empty." for empty password', () => {
     LoginPage.fillUser("admin");
