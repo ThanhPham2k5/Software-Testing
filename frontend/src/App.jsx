@@ -18,7 +18,7 @@ function App() {
             path="/admin/dashboard"
             element={
               <ProtectedRoute token={token}>
-                <Dashboard />
+                <Dashboard setToken={setToken} />
               </ProtectedRoute>
             }
           />
