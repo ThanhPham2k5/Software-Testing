@@ -149,10 +149,6 @@
   background-position: right 12px center;
 }
 
-.quantity {
-  margin-left: 12px;
-}
-
 .name .info-label {
   margin-top: 0;
 }
@@ -171,6 +167,7 @@
   font-weight: 400;
   color: #f03b3b;
   margin-top: 8px;
+  max-width: 500px;
 }
 
 .create-picture {

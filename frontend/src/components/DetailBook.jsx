@@ -10,6 +10,8 @@ function DetailBook({
   setCurrentPage,
   products,
 }) {
+  const imageUrl = `data:image/jpeg;base64,${product.imgBase64}`;
+
   async function deleteButton() {
     await axios.delete(
       `${import.meta.env.VITE_API_URL}/api/products/${product.id}`
@@ -40,7 +42,7 @@ function DetailBook({
           <div className="detail-picture">
             <img
               data-testid="detail-img"
-              src="/card-picture-img-default.svg"
+              src={imageUrl}
               alt="detail-img"
               className="detail-img"
             />
