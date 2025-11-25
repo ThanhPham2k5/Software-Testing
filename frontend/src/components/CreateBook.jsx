@@ -3,7 +3,7 @@ import "../styles/components/Createbook.css";
 import { validateProduct } from "../utils/validateProduct/validateProduct";
 import axios from "axios";
 
-function CreateBook({ checkCreate }) {
+function CreateBook({ checkCreate, onAdd }) {
   const [valueName, setValueName] = useState("");
   const [valuePrice, setValuePrice] = useState("");
   const [valueQuantity, setValueQuantity] = useState("");
@@ -34,12 +34,13 @@ function CreateBook({ checkCreate }) {
     setErrors({});
 
     try {
-      await axios.post(
+      const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/products`,
         newProduct
       );
-
+      onAdd(response.data);
       alert("Success add new book");
+      checkCreate(false);
     } catch (error) {
       console.error("Lỗi:", error);
       alert("An error has occurred");

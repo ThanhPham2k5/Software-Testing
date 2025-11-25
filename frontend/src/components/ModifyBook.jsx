@@ -38,8 +38,12 @@ function ModifyBook({ product, checkModify }) {
         `${import.meta.env.VITE_API_URL}/api/products/${product.id}`,
         newProduct
       );
-
+      onSave({
+        ...newProduct,
+        id: product.id,
+      });
       alert("Success modify book");
+      checkModify(false);
     } catch (error) {
       console.error("Lỗi:", error);
       alert("An error has occurred");
