@@ -76,5 +76,32 @@ describe('Product E2E Tests', () => {
     cy.contains('.card-name', 'Classic NoteBook').should('not.exist');
   });
 
+  it('Should show correct product when search for', () =>{
+    ProductPage.fillSearchBar('Naruto');
+    ProductPage.clickSearchBtn();
+    cy.get('[data-testid="product-container"]').should('have.length', 1);
+    cy.contains('.card-name', 'Naruto Vol. 1').should('exist');
+  });
+
+  it('Should show correct product when filter for', () =>{
+    cy.get('[data-testid="product-container"]').should('have.length', 8);
+
+    cy.contains('label.radio', 'Comic').click();
+    cy.get('[data-testid="product-container"]').should('have.length.at.least', 4);
+    cy.get('[data-testid="product-container"]').first().within(() => {
+      cy.get('.card-price').invoke('text').should('eq', '8.69');
+    });
+
+    cy.get('#low-to-high').check({ force: true });
+    cy.get('[data-testid="product-container"]').should('have.length.at.least', 4);
+    cy.get('[data-testid="product-container"]').first().within(() => {
+      cy.get('.card-price').invoke('text').should('eq', '5.28');
+    });
+
+    cy.get('input[id="price-input"]').parents('.price-typing').type(5.28);
+    cy.get('.price-typing-text').click();
+    cy.get('[data-testid="product-container"]').should('have.length', 2);
+  });
+
   
 })
