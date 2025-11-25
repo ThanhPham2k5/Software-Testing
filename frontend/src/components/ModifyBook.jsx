@@ -3,7 +3,7 @@ import "../styles/components/Createbook.css";
 import { validateProduct } from "../utils/validateProduct/validateProduct";
 import axios from "axios";
 
-function ModifyBook({ product, checkModify }) {
+function ModifyBook({ product, checkModify , onSave}) {
   const [valueName, setValueName] = useState(product.name);
   const [valuePrice, setValuePrice] = useState(product.price);
   const [valueQuantity, setValueQuantity] = useState(product.quantity);
