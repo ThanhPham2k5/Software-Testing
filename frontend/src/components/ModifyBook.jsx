@@ -3,7 +3,7 @@ import "../styles/components/Createbook.css";
 import { validateProduct } from "../utils/validateProduct/validateProduct";
 import axios from "axios";
 
-function ModifyBook({ product, checkModify , onSave}) {
+function ModifyBook({ product, checkModify, onSave }) {
   const [valueName, setValueName] = useState(product.name);
   const [valuePrice, setValuePrice] = useState(product.price);
   const [valueQuantity, setValueQuantity] = useState(product.quantity);
@@ -22,7 +22,7 @@ function ModifyBook({ product, checkModify , onSave}) {
       quantity: valueQuantity,
       description: valueDescription,
       category: valueCategory,
-      imgBase64: selectedImage
+      imgBase64: selectedImage,
     };
 
     const validationErrors = validateProduct(newProduct);
@@ -56,6 +56,11 @@ function ModifyBook({ product, checkModify , onSave}) {
 
     if (!newName || newName.trim() === "") {
       setErrors((prev) => ({ ...prev, name: "Product name cannot be empty" }));
+    } else if (newName.trim().length < 3 || newName.trim().length > 100) {
+      setErrors((prev) => ({
+        ...prev,
+        name: "Product name must be between 3-100 characters",
+      }));
     } else {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -72,7 +77,7 @@ function ModifyBook({ product, checkModify , onSave}) {
     if (newPrice < 0 || newPrice > 999999999) {
       setErrors((prev) => ({
         ...prev,
-        price: "Product price must be between 0 and 999,999,999",
+        price: "Product price must be between 0-999,999,999 characters",
       }));
     } else {
       setErrors((prev) => {
@@ -90,7 +95,7 @@ function ModifyBook({ product, checkModify , onSave}) {
     if (newQuantity < 0 || newQuantity > 99999) {
       setErrors((prev) => ({
         ...prev,
-        quantity: "Product quantity must be between 0 and 99,999",
+        quantity: "Product quantity must be between 0-99,999 characters",
       }));
     } else {
       setErrors((prev) => {
@@ -121,21 +126,21 @@ function ModifyBook({ product, checkModify , onSave}) {
     }
   };
 
-  const handlOpenFileExplorer = () =>{
+  const handlOpenFileExplorer = () => {
     fileInputRef.current.click();
-  }
+  };
 
-  const handleImageUpload = (e) =>{
+  const handleImageUpload = (e) => {
     const file = e.target.files[0];
-    if(!file) return;
+    if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = () =>{
-      const base64String = reader.result.split(',')[1] // remove prefix
-      setSelectedImage(base64String) // encoded base64 string
-    }
+    reader.onload = () => {
+      const base64String = reader.result.split(",")[1]; // remove prefix
+      setSelectedImage(base64String); // encoded base64 string
+    };
     reader.readAsDataURL(file);
-  }
+  };
 
   return (
     <>
@@ -162,8 +167,8 @@ function ModifyBook({ product, checkModify , onSave}) {
               <div className="return-text">Return</div>
             </div>
 
-            <div 
-              className="header-done" 
+            <div
+              className="header-done"
               onClick={handleSave}
               data-testid="doneBtn"
             >
@@ -186,6 +191,7 @@ function ModifyBook({ product, checkModify , onSave}) {
               </label>
 
               <input
+                data-testid="input-name"
                 type="text"
                 id="name"
                 value={valueName}
@@ -202,6 +208,7 @@ function ModifyBook({ product, checkModify , onSave}) {
               </label>
 
               <input
+                data-testid="input-price"
                 type="number"
                 min="1000"
                 step="100"
@@ -220,6 +227,7 @@ function ModifyBook({ product, checkModify , onSave}) {
               </label>
 
               <select
+                data-testid="select-category"
                 id="category"
                 name="category"
                 className="category-select"
@@ -254,6 +262,7 @@ function ModifyBook({ product, checkModify , onSave}) {
               </label>
 
               <input
+                data-testid="input-quantity"
                 type="number"
                 min="1"
                 id="quantity"
@@ -273,6 +282,7 @@ function ModifyBook({ product, checkModify , onSave}) {
               </label>
 
               <textarea
+                data-testid="input-description"
                 type="text"
                 id="desc"
                 value={valueDescription}
@@ -289,9 +299,10 @@ function ModifyBook({ product, checkModify , onSave}) {
           <div className="create-picture">
             <div className="picture-title">Upload Image</div>
 
-            <div 
+            <div
               className="picture-box"
               onClick={handlOpenFileExplorer}
+              data-testid="picture-box"
             >
               {selectedImage ? (
                 <Fragment>
@@ -321,6 +332,7 @@ function ModifyBook({ product, checkModify , onSave}) {
             </div>
 
             <input
+              data-testid="image-input"
               type="file"
               accept="image/*"
               ref={fileInputRef}

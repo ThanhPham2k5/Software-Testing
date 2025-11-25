@@ -39,6 +39,8 @@ function Login({ setToken }) {
             password: password,
           }
         );
+        const token = response.data.token;
+        localStorage.setItem("accessToken", token);
         setToken(response.data.token);
         navigate("/admin/dashboard");
       } catch (error) {

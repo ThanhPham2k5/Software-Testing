@@ -3,10 +3,11 @@ export function validateProduct(product) {
 
   if (!product.name || product.name.trim() === "") {
     errors.name = "Product name cannot be empty";
-  }
-
-  if(product.name.trim().length < 3 || product.name.trim().length > 100) {
-    errors.name = "Product name must be between 3-100 characters"
+  } else if (
+    product.name.trim().length < 3 ||
+    product.name.trim().length > 100
+  ) {
+    errors.name = "Product name must be between 3-100 characters";
   }
 
   const quantity = Number(product.quantity);

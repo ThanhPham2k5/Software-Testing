@@ -16,13 +16,18 @@ function CreateBook({ checkCreate, onAdd }) {
   const imageUrl = `data:image/jpeg;base64,${selectedImage}`;
 
   const handleSave = async () => {
+    if (!selectedImage) {
+      alert("Please select a photo for the product!");
+      return;
+    }
+
     const newProduct = {
       name: valueName,
       price: valuePrice,
       quantity: valueQuantity,
       description: valueDescription,
       category: valueCategory,
-      imgBase64: selectedImage
+      imgBase64: selectedImage,
     };
 
     const validationErrors = validateProduct(newProduct);
@@ -53,6 +58,11 @@ function CreateBook({ checkCreate, onAdd }) {
 
     if (!newName || newName.trim() === "") {
       setErrors((prev) => ({ ...prev, name: "Product name cannot be empty" }));
+    } else if (newName.trim().length < 3 || newName.trim().length > 100) {
+      setErrors((prev) => ({
+        ...prev,
+        name: "Product name must be between 3-100 characters",
+      }));
     } else {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -69,7 +79,7 @@ function CreateBook({ checkCreate, onAdd }) {
     if (newPrice < 0 || newPrice > 999999999) {
       setErrors((prev) => ({
         ...prev,
-        price: "Product price must be between 0 and 999,999,999",
+        price: "Product price must be between 0-999,999,999 characters",
       }));
     } else {
       setErrors((prev) => {
@@ -87,7 +97,7 @@ function CreateBook({ checkCreate, onAdd }) {
     if (newQuantity < 0 || newQuantity > 99999) {
       setErrors((prev) => ({
         ...prev,
-        quantity: "Product quantity must be between 0 and 99,999",
+        quantity: "Product quantity must be between 0-99,999 characters",
       }));
     } else {
       setErrors((prev) => {
@@ -118,21 +128,21 @@ function CreateBook({ checkCreate, onAdd }) {
     }
   };
 
-  const handlOpenFileExplorer = () =>{
+  const handlOpenFileExplorer = () => {
     fileInputRef.current.click();
-  }
+  };
 
-  const handleImageUpload = (e) =>{
+  const handleImageUpload = (e) => {
     const file = e.target.files[0];
-    if(!file) return;
+    if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = () =>{
-      const base64String = reader.result.split(',')[1] // remove prefix
-      setSelectedImage(base64String) // encoded base64 string
-    }
+    reader.onload = () => {
+      const base64String = reader.result.split(",")[1]; // remove prefix
+      setSelectedImage(base64String); // encoded base64 string
+    };
     reader.readAsDataURL(file);
-  }
+  };
 
   return (
     <>
@@ -159,8 +169,8 @@ function CreateBook({ checkCreate, onAdd }) {
               <div className="return-text">Return</div>
             </div>
 
-            <div 
-              className="header-done" 
+            <div
+              className="header-done"
               onClick={handleSave}
               data-testid="doneBtn"
             >
@@ -183,6 +193,7 @@ function CreateBook({ checkCreate, onAdd }) {
               </label>
 
               <input
+                data-testid="input-name"
                 type="text"
                 id="name"
                 value={valueName}
@@ -199,6 +210,7 @@ function CreateBook({ checkCreate, onAdd }) {
               </label>
 
               <input
+                data-testid="input-price"
                 type="number"
                 min="1000"
                 step="100"
@@ -217,6 +229,7 @@ function CreateBook({ checkCreate, onAdd }) {
               </label>
 
               <select
+                data-testid="select-category"
                 id="category"
                 name="category"
                 className="category-select"
@@ -251,6 +264,7 @@ function CreateBook({ checkCreate, onAdd }) {
               </label>
 
               <input
+                data-testid="input-quantity"
                 type="number"
                 min="1"
                 id="quantity"
@@ -270,6 +284,7 @@ function CreateBook({ checkCreate, onAdd }) {
               </label>
 
               <textarea
+                data-testid="input-description"
                 type="text"
                 id="desc"
                 value={valueDescription}
@@ -286,40 +301,36 @@ function CreateBook({ checkCreate, onAdd }) {
           <div className="create-picture">
             <div className="picture-title">Upload Image</div>
 
-            <div 
+            <div
               className="picture-box"
               data-testid="picture-box"
               onClick={handlOpenFileExplorer}
-              >
+            >
               {/* first state: no img */}
-              {!selectedImage && 
-              <div className="picture-add">
-                <img
-                  src="/picture-add-ico.svg"
-                  alt="picture-add-ico"
-                  className="picture-add-ico"
-                />
-              </div>
-              }
-
-              {/* second state: preview img */}
-              {selectedImage &&
-              <>
-                <img
-                  src={imageUrl}
-                  alt="preview"
-                  className="Picture-img"
-                />
-
-                <div className="picture-modify">
+              {!selectedImage && (
+                <div className="picture-add">
                   <img
-                    src="/picture-modify-ico.svg"
-                    alt="picture-modify-ico"
-                    className="picture-modify-ico"
+                    src="/picture-add-ico.svg"
+                    alt="picture-add-ico"
+                    className="picture-add-ico"
                   />
                 </div>
-              </> 
-              }
+              )}
+
+              {/* second state: preview img */}
+              {selectedImage && (
+                <>
+                  <img src={imageUrl} alt="preview" className="Picture-img" />
+
+                  <div className="picture-modify">
+                    <img
+                      src="/picture-modify-ico.svg"
+                      alt="picture-modify-ico"
+                      className="picture-modify-ico"
+                    />
+                  </div>
+                </>
+              )}
             </div>
 
             <input

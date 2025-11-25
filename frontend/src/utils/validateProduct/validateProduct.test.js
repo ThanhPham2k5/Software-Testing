@@ -2,7 +2,7 @@ import { it, expect, describe } from "vitest";
 import { validateProduct } from "./validateProduct";
 
 describe("Product Validation Tests", () => {
-  it("Test product name empty", () => {
+  it("Test product name rong", () => {
     const product = {
       name: "",
       price: 10000,
@@ -15,6 +15,32 @@ describe("Product Validation Tests", () => {
     });
   });
 
+  it("Test product name qua ngan", () => {
+    const product = {
+      name: "ab",
+      price: 10000,
+      quantity: 10,
+      description: "demo",
+      category: "MANGA",
+    };
+    expect(validateProduct(product)).toEqual({
+      name: "Product name must be between 3-100 characters",
+    });
+  });
+
+  it("Test product name qua dai", () => {
+    const product = {
+      name: "abc".repeat(100),
+      price: 10000,
+      quantity: 10,
+      description: "demo",
+      category: "MANGA",
+    };
+    expect(validateProduct(product)).toEqual({
+      name: "Product name must be between 3-100 characters",
+    });
+  });
+
   it("Test product price am", () => {
     const product = {
       name: "Dac nhan tam",
@@ -24,7 +50,7 @@ describe("Product Validation Tests", () => {
       category: "MANGA",
     };
     expect(validateProduct(product)).toEqual({
-      price: "Product price must be between 0 and 999,999,999",
+      price: "Product price must be between 0-999,999,999 characters",
     });
   });
 
@@ -37,7 +63,7 @@ describe("Product Validation Tests", () => {
       category: "MANGA",
     };
     expect(validateProduct(product)).toEqual({
-      price: "Product price must be between 0 and 999,999,999",
+      price: "Product price must be between 0-999,999,999 characters",
     });
   });
 
@@ -50,7 +76,7 @@ describe("Product Validation Tests", () => {
       category: "MANGA",
     };
     expect(validateProduct(product)).toEqual({
-      quantity: "Product quantity must be between 0 and 99,999",
+      quantity: "Product quantity must be between 0-99,999 characters",
     });
   });
 
@@ -63,7 +89,7 @@ describe("Product Validation Tests", () => {
       category: "MANGA",
     };
     expect(validateProduct(product)).toEqual({
-      quantity: "Product quantity must be between 0 and 99,999",
+      quantity: "Product quantity must be between 0-99,999 characters",
     });
   });
 

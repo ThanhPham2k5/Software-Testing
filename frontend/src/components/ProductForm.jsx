@@ -30,29 +30,21 @@ export default function ProductForm({ products, setProducts }) {
   };
 
   useEffect(() => {
-    // Trường hợp đặc biệt: Nếu tổng số trang quá ít (<= 4),
-    // chúng ta chỉ hiển thị 1, 2, 3, 4
     if (totalPages <= 4) {
       setWindowStart(1);
       return;
     }
 
-    // 1. Cố gắng giữ currentPage ở giữa (nút thứ 2)
     let newStart = currentPage - 1;
 
-    // 2. Kẹp ở đầu: Không được nhỏ hơn 1
     if (newStart < 1) {
       newStart = 1;
     }
 
-    // 3. Kẹp ở cuối: 3 nút đầu không được chạm vào nút cuối
-    // (newStart + 2) là nút thứ 3. Nó phải < totalPages.
-    // Vì vậy newStart tối đa là totalPages - 3.
     if (newStart > totalPages - 3) {
       newStart = totalPages - 3;
     }
 
-    // Cập nhật state của "cửa sổ trượt"
     setWindowStart(newStart);
   }, [currentPage, totalPages]);
 
@@ -165,11 +157,11 @@ export default function ProductForm({ products, setProducts }) {
               <div className="card-page">
                 {totalPages >= 1 ? (
                   <div
-                    className={
+                    className={`page-number ${
                       currentPage === 1
                         ? "page-selected prev-page"
                         : "prev-page"
-                    }
+                    }`}
                     onClick={() => handlePageClick(1)}
                   >
                     1
@@ -178,23 +170,24 @@ export default function ProductForm({ products, setProducts }) {
 
                 {totalPages >= 2 ? (
                   <div
-                    className={
+                    className={`page-number ${
                       currentPage === 2
                         ? "page-selected current-page"
                         : "current-page"
-                    }
+                    }`}
                     onClick={() => handlePageClick(2)}
                   >
                     2
                   </div>
                 ) : null}
+
                 {totalPages == 3 ? (
                   <div
-                    className={
+                    className={`page-number ${
                       currentPage === 3
                         ? "page-selected next-page"
                         : "next-page"
-                    }
+                    }`}
                     onClick={() => handlePageClick(3)}
                   >
                     3

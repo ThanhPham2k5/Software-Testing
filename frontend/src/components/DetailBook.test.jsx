@@ -18,13 +18,13 @@ describe("Test render component", () => {
 
     const checkShow = vi.fn();
     const checkModify = vi.fn();
-    const checkDelete = vi.fn();
+    const onDelete = vi.fn();
     render(
       <DetailBook
         product={product}
         checkShow={checkShow}
         checkModify={checkModify}
-        checkDelete={checkDelete}
+        onDelete={onDelete}
       />
     );
     expect(screen.getByText("Return")).toBeInTheDocument();
@@ -54,13 +54,13 @@ describe("Test user interactions", () => {
 
     const checkShow = vi.fn();
     const checkModify = vi.fn();
-    const checkDelete = vi.fn();
+    const onDelete = vi.fn();
     render(
       <DetailBook
         product={product}
         checkShow={checkShow}
         checkModify={checkModify}
-        checkDelete={checkDelete}
+        onDelete={onDelete}
       />
     );
 
@@ -82,13 +82,13 @@ describe("Test user interactions", () => {
 
     const checkShow = vi.fn();
     const checkModify = vi.fn();
-    const checkDelete = vi.fn();
+    const onDelete = vi.fn();
     render(
       <DetailBook
         product={product}
         checkShow={checkShow}
         checkModify={checkModify}
-        checkDelete={checkDelete}
+        onDelete={onDelete}
       />
     );
 
@@ -111,15 +111,13 @@ describe("Test user interactions", () => {
 
     const checkShow = vi.fn();
     const checkModify = vi.fn();
-    const checkDelete = vi.fn();
-    const products = vi.fn();
+    const onDelete = vi.fn();
     render(
       <DetailBook
-        products={products}
         product={product}
         checkShow={checkShow}
         checkModify={checkModify}
-        checkDelete={checkDelete}
+        onDelete={onDelete}
       />
     );
 
@@ -130,7 +128,6 @@ describe("Test user interactions", () => {
     expect(axios.delete).toBeCalledWith(
       `http://localhost:8080/api/products/${product.id}`
     );
-    expect(checkShow).toHaveBeenCalled();
-    expect(checkDelete).toHaveBeenCalled();
+    expect(onDelete).toHaveBeenCalled();
   });
 });

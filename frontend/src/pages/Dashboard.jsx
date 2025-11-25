@@ -81,25 +81,21 @@ function Dashboard({ setToken }) {
   };
 
   const getProcessedProducts = () => {
-    // 1. Lọc theo Category
     let result =
       selectedCategory === "ALL"
         ? products
         : products.filter((p) => p.category === selectedCategory);
 
-    // 2. Lọc theo GIÁ CHÍNH XÁC
     if (filterPrice !== "") {
       result = result.filter((p) => p.price === parseFloat(filterPrice));
     }
 
-    // 3. LỌC THEO TÊN (SEARCH) <--- THÊM ĐOẠN NÀY
     if (searchTerm !== "") {
       result = result.filter((p) =>
         p.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // 4. Sắp xếp (Sort)
     if (sortOrder === "HIGH_TO_LOW") {
       result = [...result].sort((a, b) => b.price - a.price);
     } else if (sortOrder === "LOW_TO_HIGH") {
@@ -163,7 +159,10 @@ function Dashboard({ setToken }) {
                 <Link
                   to={"/"}
                   className="user-option-logout"
-                  onClick={() => setToken(null)}
+                  onClick={() => {
+                    setToken(null);
+                    localStorage.removeItem("accessToken");
+                  }}
                 >
                   <img
                     src="/user-option-logout-img.svg"

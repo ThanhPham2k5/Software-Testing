@@ -6,7 +6,11 @@ import { useState } from "react";
 import ProtectedRoute from "./components/ProtectRoute";
 
 function App() {
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(() => {
+    const savedToken = localStorage.getItem("accessToken");
+
+    return savedToken || null;
+  });
 
   return (
     <>
