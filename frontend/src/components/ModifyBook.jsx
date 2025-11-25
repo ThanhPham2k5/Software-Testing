@@ -3,7 +3,7 @@ import "../styles/components/Createbook.css";
 import { validateProduct } from "../utils/validateProduct/validateProduct";
 import axios from "axios";
 
-function ModifyBook({ product, checkModify }) {
+function ModifyBook({ product, checkModify, onSave }) {
   const imageUrl = `data:image/jpeg;base64,${product.imgBase64}`;
   const [valueName, setValueName] = useState(product.name);
   const [valuePrice, setValuePrice] = useState(product.price);
@@ -37,8 +37,12 @@ function ModifyBook({ product, checkModify }) {
         `${import.meta.env.VITE_API_URL}/api/products/${product.id}`,
         newProduct
       );
-
+      onSave({
+        ...newProduct,
+        id: product.id,
+      });
       alert("Success modify book");
+      checkModify(false);
     } catch (error) {
       console.error("Lỗi:", error);
       alert("An error has occurred");
