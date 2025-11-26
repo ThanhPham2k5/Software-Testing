@@ -19,6 +19,14 @@ class ProductPage{
         this.getProductInList(name).click();
     }
 
+    clickSearchBtn(){
+        cy.get('.search-bar-button').click();
+    }
+
+    fillSearchBar(search){
+        cy.get('input[id="searchBar"]').type(search);
+    }
+
     fillProductForm(product){
         // Nhập dữ liệu 
         cy.get('input[id="name"]').type(product.name);
