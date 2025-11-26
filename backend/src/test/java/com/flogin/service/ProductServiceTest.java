@@ -4,6 +4,7 @@ import com.flogin.dto.ProductDTO;
 import com.flogin.entity.ProductEntity;
 import com.flogin.helper.ProductMapper;
 import com.flogin.repository.ProductRepository;
+import com.flogin.util.XssSanitizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ class ProductServiceTest {
 
     @Mock
     private ProductRepository mockRepository;
+
+    @Mock
+    private XssSanitizer sanitizer;
 
     @BeforeEach
     void setup(){
@@ -55,6 +59,7 @@ class ProductServiceTest {
                 ProductEntity.Category.COMIC
         );
 
+        when(sanitizer.sanitize(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
         when(mockRepository.save(any(ProductEntity.class))).thenReturn(entity);
 
         try(MockedStatic<ProductMapper> mockMapper = mockStatic(ProductMapper.class)) {
@@ -120,6 +125,7 @@ class ProductServiceTest {
                 ProductEntity.Category.COMIC
         );
 
+        when(sanitizer.sanitize(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
         when(mockRepository.findById(any(Long.class))).thenReturn(Optional.of(entity));
         when(mockRepository.save(any(ProductEntity.class))).thenReturn(updatedEntity);
 
@@ -207,6 +213,8 @@ class ProductServiceTest {
         verify(mockRepository, times(1)).findById(any(Long.class));
     }
 
+
+    // Security test for input validation
     @Test
     @DisplayName("validate product fail with empty name")
     void testValidateFailWithEmptyName(){
@@ -246,6 +254,45 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("validate product fail with name too short")
+    void testValidateFailWithShortName(){
+        ProductDTO dto = new ProductDTO();
+        dto.setName("ab");
+        dto.setPrice(100);
+        dto.setQuantity(10);
+        dto.setDescription("test description");
+        dto.setCategory(ProductEntity.Category.COMIC);
+        dto.setImgBase64("test base64");
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals("Invalid name length", thrown.getReason());
+    }
+
+    @Test
+    @DisplayName("validate product fail with name too long")
+    void testValidateFailWithLongName(){
+        String longName = "a".repeat(101);
+        ProductDTO dto = new ProductDTO();
+        dto.setName(longName);
+        dto.setPrice(100);
+        dto.setQuantity(10);
+        dto.setDescription("test description");
+        dto.setCategory(ProductEntity.Category.COMIC);
+        dto.setImgBase64("test base64");
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals("Invalid name length", thrown.getReason());
+    }
+
+    @Test
     @DisplayName("validate product fail with negative price")
     void testValidateFailWithNegativePrice(){
         ProductDTO dto = new ProductDTO();
@@ -261,7 +308,26 @@ class ProductServiceTest {
                 () -> service.validateProduct(dto)
         );
 
-        assertEquals("Product's price can't be negative", thrown.getReason());
+        assertEquals("Price out of range", thrown.getReason());
+    }
+
+    @Test
+    @DisplayName("validate product fail with price too large")
+    void testValidateFailWithLargePrice(){
+        ProductDTO dto = new ProductDTO();
+        dto.setName("test name");
+        dto.setPrice(1000000000);
+        dto.setQuantity(10);
+        dto.setDescription("test description");
+        dto.setCategory(ProductEntity.Category.COMIC);
+        dto.setImgBase64("test base64");
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals("Price out of range", thrown.getReason());
     }
 
 
@@ -281,7 +347,26 @@ class ProductServiceTest {
                 () -> service.validateProduct(dto)
         );
 
-        assertEquals("Product's quantity can't be negative", thrown.getReason());
+        assertEquals("Quantity out of range", thrown.getReason());
+    }
+
+    @Test
+    @DisplayName("validate product fail with quantity too large")
+    void testValidateFailWithLargeQuantity(){
+        ProductDTO dto = new ProductDTO();
+        dto.setName("test name");
+        dto.setPrice(100);
+        dto.setQuantity(1000000);
+        dto.setDescription("test description");
+        dto.setCategory(ProductEntity.Category.COMIC);
+        dto.setImgBase64("test base64");
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals("Quantity out of range", thrown.getReason());
     }
 
     @Test
@@ -320,6 +405,26 @@ class ProductServiceTest {
         );
 
         assertEquals("Product's description cannot be empty", thrown.getReason());
+    }
+
+    @Test
+    @DisplayName("validate product fail with too long description")
+    void testValidateFailWithLongDescription(){
+        String longDesc = "D".repeat(501);
+        ProductDTO dto = new ProductDTO();
+        dto.setName("test name");
+        dto.setPrice(100);
+        dto.setQuantity(10);
+        dto.setDescription(longDesc);
+        dto.setCategory(ProductEntity.Category.COMIC);
+        dto.setImgBase64("test base64");
+
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> service.validateProduct(dto)
+        );
+
+        assertEquals("Description is too long", thrown.getReason());
     }
 
     @Test
