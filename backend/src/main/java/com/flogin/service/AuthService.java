@@ -1,39 +1,48 @@
 package com.flogin.service;
 
+import com.flogin.util.JwtUtil;
+import com.flogin.util.XssSanitizer;
 import com.flogin.dto.LoginRequestDTO;
 import com.flogin.dto.LoginResponseDTO;
 import com.flogin.entity.AccountEntity;
 import com.flogin.repository.AccountRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
 @Service
 public class AuthService {
+    private final XssSanitizer sanitizer;
+    private final JwtUtil jwtUtil;
     private final AccountRepository repository;
 
-    public AuthService(AccountRepository repository){
+    public AuthService(AccountRepository repository, XssSanitizer sanitizer, JwtUtil jwtUtil){
+        this.jwtUtil = jwtUtil;
+        this.sanitizer = sanitizer;
         this.repository = repository;
     }
 
     public LoginResponseDTO login(LoginRequestDTO request){
-        validateUsername(request.getUsername());
-        validatePassword(request.getPassword());
+        String sanitizedUsername = sanitizer.sanitize(request.getUsername());
+        String sanitizedPassword = sanitizer.sanitize(request.getPassword());
 
-        Optional<AccountEntity> account = repository.findByUsername(request.getUsername());
+        validateUsername(sanitizedUsername);
+        validatePassword(sanitizedPassword);
+
+        Optional<AccountEntity> account = repository.findByUsername(sanitizedUsername);
         if(account.isEmpty()){
             return new LoginResponseDTO(false,"Username is incorrect",null);
         }
 
         AccountEntity foundAccount = account.get();
-        boolean match = request.getPassword().equals(foundAccount.getPassword());
+        boolean match = sanitizedPassword.equals(foundAccount.getPassword());
         if(!match){
             return new LoginResponseDTO(false,"Password is incorrect",null);
         }
 
-        return new LoginResponseDTO(true,"Login successful","token-123");
+        String token = jwtUtil.generateToken(foundAccount.getUsername());
+
+        return new LoginResponseDTO(true,"Login successful", token);
     }
 
     public void validateUsername(String username){
