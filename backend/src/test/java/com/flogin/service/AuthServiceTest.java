@@ -4,6 +4,8 @@ import com.flogin.dto.LoginRequestDTO;
 import com.flogin.dto.LoginResponseDTO;
 import com.flogin.entity.AccountEntity;
 import com.flogin.repository.AccountRepository;
+import com.flogin.util.JwtUtil;
+import com.flogin.util.XssSanitizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,9 +25,15 @@ class AuthServiceTest {
     @Mock
     private AccountRepository mockRepository;
 
+    @Mock
+    private XssSanitizer sanitizer;
+
+    @Mock
+    private JwtUtil jwtUtil;
+
     @BeforeEach
     void setUp() {
-        authService = new AuthService(mockRepository);
+        authService = new AuthService(mockRepository, sanitizer, jwtUtil);
     }
 
     @Test
@@ -36,6 +45,7 @@ class AuthServiceTest {
         mockAccount.setUsername("testuser");
         mockAccount.setPassword("password123");
 
+        when(sanitizer.sanitize(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
         when(mockRepository.findByUsername("testuser"))
                 .thenReturn(Optional.of(mockAccount));
 
@@ -50,6 +60,7 @@ class AuthServiceTest {
     void testLoginFailWithUsername(){
         LoginRequestDTO request = new LoginRequestDTO("testuser", "password123");
 
+        when(sanitizer.sanitize(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
         when(mockRepository.findByUsername("testuser"))
                 .thenReturn(Optional.empty());
 
@@ -69,6 +80,7 @@ class AuthServiceTest {
         mockAccount.setUsername("testuser");
         mockAccount.setPassword("123");
 
+        when(sanitizer.sanitize(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
         when(mockRepository.findByUsername("testuser"))
                 .thenReturn(Optional.of(mockAccount));
 
@@ -84,6 +96,8 @@ class AuthServiceTest {
     void testLoginFailWithEmptyUsername(){
         LoginRequestDTO request = new LoginRequestDTO("", "123");
 
+        when(sanitizer.sanitize(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
+
         IllegalArgumentException thrown = assertThrows(
                 IllegalArgumentException.class,
                 ()->authService.login(request)
@@ -95,6 +109,8 @@ class AuthServiceTest {
     @DisplayName("Login fail with empty password")
     void testLoginFailWithEmptyPassword(){
         LoginRequestDTO request = new LoginRequestDTO("testuser", "");
+
+        when(sanitizer.sanitize(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
 
         IllegalArgumentException thrown = assertThrows(
                 IllegalArgumentException.class,
@@ -119,6 +135,8 @@ class AuthServiceTest {
     @DisplayName("Login fail with null password")
     void testLoginFailWithNullPassword(){
         LoginRequestDTO request = new LoginRequestDTO("testuser", null);
+
+        when(sanitizer.sanitize(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
 
         IllegalArgumentException thrown = assertThrows(
                 IllegalArgumentException.class,
