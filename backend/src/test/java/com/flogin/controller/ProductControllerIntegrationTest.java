@@ -1,13 +1,18 @@
 package com.flogin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flogin.SecurityConfig;
 import com.flogin.dto.ProductDTO;
 import com.flogin.entity.ProductEntity;
 import com.flogin.service.ProductService;
+import com.flogin.util.JwtUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -17,15 +22,18 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
+@Import(SecurityConfig.class) // disable Spring Security filters
 @DisplayName("Product API Integration Tests")
 class ProductControllerIntegrationTest {
 
@@ -36,7 +44,16 @@ class ProductControllerIntegrationTest {
     private ObjectMapper objectMapper;
 
     @MockitoBean
+    private JwtUtil jwtUtil;
+
+    @MockitoBean
     private ProductService productService;
+
+    @BeforeEach
+    void setUp() {
+        // Make any token be valid for tests
+        when(jwtUtil.validateToken(anyString())).thenReturn(true);
+    }
 
     @Test
     @DisplayName("GET /api/products")
@@ -56,7 +73,8 @@ class ProductControllerIntegrationTest {
         mockMvc.perform(get("/api/products")
                         .param("page", "0")
                         .param("size", "2")
-                        .header("Origin", "http://localhost:5173"))
+                        .header("Origin", "http://localhost:5173")
+                        .header("Authorization", "Bearer token-123"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(2)))
                 .andExpect(jsonPath("$.content[0].name").value("Book1"))
@@ -65,6 +83,11 @@ class ProductControllerIntegrationTest {
                 .andExpect(jsonPath("$.size").value(2))
                 .andExpect(jsonPath("$.totalElements").value(2))
                 .andExpect(jsonPath("$.totalPages").value(1))
+                // Content Security Policy header
+                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
+                // X-Frame-Options header
+                .andExpect(header().string("X-Frame-Options", "DENY"))
+                // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
                 .andExpect(header().string("Content-Type", "application/json"));
     }
@@ -81,11 +104,17 @@ class ProductControllerIntegrationTest {
                 .thenReturn(product);
 
         mockMvc.perform(get("/api/products/{id}", 1L)
-                        .header("Origin", "http://localhost:5173"))
+                        .header("Origin", "http://localhost:5173")
+                        .header("Authorization", "Bearer token-123"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Book1"))
                 .andExpect(jsonPath("$.price").value(100))
                 .andExpect(jsonPath("$.category").value("COMIC"))
+                // Content Security Policy header
+                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
+                // X-Frame-Options header
+                .andExpect(header().string("X-Frame-Options", "DENY"))
+                // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
                 .andExpect(header().string("Content-Type", "application/json"));
     }
@@ -117,10 +146,16 @@ class ProductControllerIntegrationTest {
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
-                        .header("Origin", "http://localhost:5173"))
+                        .header("Origin", "http://localhost:5173")
+                        .header("Authorization", "Bearer token-123"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("abc"))
                 .andExpect(jsonPath("$.price").value(10.0))
+                // Content Security Policy header
+                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
+                // X-Frame-Options header
+                .andExpect(header().string("X-Frame-Options", "DENY"))
+                // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
                 .andExpect(header().string("Content-Type", "application/json"));
     }
@@ -152,10 +187,16 @@ class ProductControllerIntegrationTest {
         mockMvc.perform(put("/api/products/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
-                        .header("Origin", "http://localhost:5173"))
+                        .header("Origin", "http://localhost:5173")
+                        .header("Authorization", "Bearer token-123"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("ABC_updated"))
                 .andExpect(jsonPath("$.description").value("this is a updated description"))
+                // Content Security Policy header
+                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
+                // X-Frame-Options header
+                .andExpect(header().string("X-Frame-Options", "DENY"))
+                // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
                 .andExpect(header().string("Content-Type", "application/json"));
     }
@@ -164,8 +205,14 @@ class ProductControllerIntegrationTest {
     @DisplayName("DELETE /api/products/{id}")
     void testDeleteProductSuccessful() throws Exception{
         mockMvc.perform(delete("/api/products/{id}", 1L)
-                        .header("Origin", "http://localhost:5173"))
+                        .header("Origin", "http://localhost:5173")
+                        .header("Authorization", "Bearer token-123"))
                 .andExpect(status().isNoContent())
+                // Content Security Policy header
+                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
+                // X-Frame-Options header
+                .andExpect(header().string("X-Frame-Options", "DENY"))
+                // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"));
     }
 }
