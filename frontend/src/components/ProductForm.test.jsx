@@ -78,7 +78,7 @@ describe("Test ProductForm component", () => {
     expect(screen.queryByTestId("mock-product-list")).not.toBeInTheDocument();
   });
 
-  it("Test click vao 1 san pham", async () => {
+  it("Test nhan vao 1 san pham", async () => {
     const user = userEvent.setup();
     render(
       <ProductForm products={mockProducts} setProducts={mockSetProducts} />
