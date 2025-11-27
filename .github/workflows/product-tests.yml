@@ -65,3 +65,20 @@ jobs:
           name: backend-product-reports
           path: backend/target/surefire-reports/*.xml
           retention-days: 1
+
+      - name: Run backend
+        run: |
+          cd backend
+          mvn clean install -DskipTests
+          mvn spring-boot:run &
+          sleep 10
+
+      - name: Run frontend
+        run: |
+          cd frontend
+          npm run dev -- --host &
+
+      - name: Run Product E2E Test (Cypress)
+        run: |
+          cd frontend
+          npx cypress run --spec "cypress/e2e/product.e2e.spec.js"
