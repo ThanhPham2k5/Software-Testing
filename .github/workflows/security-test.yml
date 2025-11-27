@@ -38,6 +38,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: backend-product-reports
+          name: backend-security-reports
           path: backend/target/surefire-reports/*.xml
           retention-days: 1
