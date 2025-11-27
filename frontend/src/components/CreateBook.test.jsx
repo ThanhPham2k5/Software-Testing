@@ -53,6 +53,8 @@ describe("Test CreateBook component", () => {
     const user = userEvent.setup();
     const checkCreate = vi.fn();
     const onAdd = vi.fn();
+    const mockToken = "mock-token-123";
+    localStorage.setItem("accessToken", mockToken);
 
     const mockResponse = {
       data: { id: 101, name: "New Book", price: 50000 },
@@ -91,6 +93,11 @@ describe("Test CreateBook component", () => {
         quantity: "100",
         category: "MANGA",
         imgBase64: "base64StringGiaLap",
+      }),
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: `Bearer ${mockToken}`,
+        }),
       })
     );
 
