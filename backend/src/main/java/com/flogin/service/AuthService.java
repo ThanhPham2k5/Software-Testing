@@ -24,10 +24,9 @@ public class AuthService {
 
     public LoginResponseDTO login(LoginRequestDTO request){
         String sanitizedUsername = sanitizer.sanitize(request.getUsername());
-        String sanitizedPassword = sanitizer.sanitize(request.getPassword());
 
         validateUsername(sanitizedUsername);
-        validatePassword(sanitizedPassword);
+        validatePassword(request.getPassword());
 
         Optional<AccountEntity> account = repository.findByUsername(sanitizedUsername);
         if(account.isEmpty()){
@@ -35,7 +34,7 @@ public class AuthService {
         }
 
         AccountEntity foundAccount = account.get();
-        boolean match = sanitizedPassword.equals(foundAccount.getPassword());
+        boolean match = (request.getPassword()).equals(foundAccount.getPassword());
         if(!match){
             return new LoginResponseDTO(false,"Password is incorrect",null);
         }
