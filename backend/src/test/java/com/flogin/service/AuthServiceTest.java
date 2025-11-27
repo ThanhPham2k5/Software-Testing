@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -31,9 +33,13 @@ class AuthServiceTest {
     @Mock
     private JwtUtil jwtUtil;
 
+    @Mock
+    private BCryptPasswordEncoder passwordEncoder;
+
     @BeforeEach
     void setUp() {
-        authService = new AuthService(mockRepository, sanitizer, jwtUtil);
+        authService = new AuthService(mockRepository, sanitizer, jwtUtil, passwordEncoder);
+
     }
 
     @Test
@@ -45,6 +51,7 @@ class AuthServiceTest {
         mockAccount.setUsername("testuser");
         mockAccount.setPassword("password123");
 
+        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
         when(sanitizer.sanitize(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
         when(mockRepository.findByUsername("testuser"))
                 .thenReturn(Optional.of(mockAccount));
@@ -80,6 +87,7 @@ class AuthServiceTest {
         mockAccount.setUsername("testuser");
         mockAccount.setPassword("123");
 
+        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
         when(sanitizer.sanitize(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
         when(mockRepository.findByUsername("testuser"))
                 .thenReturn(Optional.of(mockAccount));
