@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AuthController.class)
 @Import(SecurityConfig.class)
-class AuthControllerMockedTest {
+class AuthControllerMockTest {
     @Autowired
     private MockMvc mockMvc;
 

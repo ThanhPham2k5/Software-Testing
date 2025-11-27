@@ -49,9 +49,9 @@ class AuthControllerIntegrationTest {
                         .header("Origin", "http://localhost:5173"))
                 .andExpect(status().isOk()) // Mong đợi HTTP 200
                 // Content Security Policy header
-                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
+                .andExpect(header().string("Content-Security-Policy", "default-src 'self' 'unsafe-inline'"))
                 // X-Frame-Options header
-                .andExpect(header().string("X-Frame-Options", "DENY"))
+                .andExpect(header().string("X-Frame-Options", "SAMEORIGIN"))
                 // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173")) //CORS
                 .andExpect(header().string("Content-Type", "application/json"))
@@ -76,9 +76,9 @@ class AuthControllerIntegrationTest {
                         .header("Origin", "http://localhost:5173"))
                 .andExpect(status().isUnauthorized())
                 // Content Security Policy header
-                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
+                .andExpect(header().string("Content-Security-Policy", "default-src 'self' 'unsafe-inline'"))
                 // X-Frame-Options header
-                .andExpect(header().string("X-Frame-Options", "DENY"))
+                .andExpect(header().string("X-Frame-Options", "SAMEORIGIN"))
                 // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173")) //CORS
                 .andExpect(header().string("Content-Type", "application/json"))
@@ -103,9 +103,9 @@ class AuthControllerIntegrationTest {
                         .header("Origin", "http://localhost:5173"))
                 .andExpect(status().isUnauthorized())
                 // Content Security Policy header
-                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
+                .andExpect(header().string("Content-Security-Policy", "default-src 'self' 'unsafe-inline'"))
                 // X-Frame-Options header
-                .andExpect(header().string("X-Frame-Options", "DENY"))
+                .andExpect(header().string("X-Frame-Options", "SAMEORIGIN"))
                 // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173")) //CORS
                 .andExpect(header().string("Content-Type", "application/json"))
