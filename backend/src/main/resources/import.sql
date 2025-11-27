@@ -1,9 +1,9 @@
 -- ===============================
 -- ACCOUNTS
 -- ===============================
-INSERT INTO account (username, password) VALUES ('admin', '@Admin123');
-INSERT INTO account (username, password) VALUES ('alice_smith', '@Alice123');
-INSERT INTO account (username, password) VALUES ('john_doe', '@John123');
+INSERT INTO account (username, password) VALUES ('admin', '$2a$10$7e39pz8veHGd945v6EWYLOTT460oyq1yESuAwwi3yu.2Bq.n1KJ9S');
+INSERT INTO account (username, password) VALUES ('alice_smith', '$2a$10$4nAtKigvbWHfO59LScICuOaq2kU48WMno7eWjBeYHL/auLUvzD2CG');
+INSERT INTO account (username, password) VALUES ('john_doe', '$2a$10$ZZhlqIKAme4SDU22eQgHhujUoWTTaQ5ScjOWy2.QgbRCZFFtxRSTW');
 
 
 -- ===============================

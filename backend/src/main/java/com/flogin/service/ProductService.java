@@ -1,5 +1,6 @@
 package com.flogin.service;
 
+import com.flogin.util.XssSanitizer;
 import com.flogin.dto.ProductDTO;
 import com.flogin.entity.ProductEntity;
 import com.flogin.helper.ProductMapper;
@@ -10,16 +11,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
 
 @Service
 public class ProductService {
+    private final XssSanitizer sanitizer;
     private final ProductRepository repository;
 
-    public ProductService(ProductRepository repository){
+    public ProductService(ProductRepository repository, XssSanitizer sanitizer){
+        this.sanitizer = sanitizer;
         this.repository = repository;
     }
 
     public ProductDTO createProduct(ProductDTO dto){
+        // sanitize frontend's dto
+        dto.setName(sanitizer.sanitize(dto.getName()));
+        dto.setDescription(sanitizer.sanitize(dto.getDescription()));
+
         validateProduct(dto);
         ProductEntity entity = ProductMapper.toEntity(dto);
         entity.setDeleted(false);
@@ -39,6 +48,10 @@ public class ProductService {
     }
 
     public ProductDTO updateProduct(long id, ProductDTO updated) {
+        // sanitize frontend's dto
+        updated.setName(sanitizer.sanitize(updated.getName()));
+        updated.setDescription(sanitizer.sanitize(updated.getDescription()));
+
         validateProduct(updated);
         ProductDTO existing = getProduct(id);
         existing.setName(updated.getName());
@@ -53,34 +66,40 @@ public class ProductService {
 
     public void validateProduct(ProductDTO dto){
         if(dto.getName() == null || dto.getName().isBlank())
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Product's name cannot be empty"
-            );
+            throw new ResponseStatusException(BAD_REQUEST, "Product's name cannot be empty");
 
-        if(dto.getPrice() <= 0)
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Product's price can't be negative"
-            );
+        if (dto.getName().length() < 3 || dto.getName().length() > 100)
+            throw new ResponseStatusException(BAD_REQUEST, "Invalid name length");
 
-        if(dto.getQuantity() < 0)
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Product's quantity can't be negative"
-            );
+
+        if(dto.getPrice() <= 0 || dto.getPrice() > 999_999_999)
+            throw new ResponseStatusException(BAD_REQUEST, "Price out of range");
+
+
+        if(dto.getQuantity() < 0 || dto.getQuantity() > 99_999)
+            throw new ResponseStatusException(BAD_REQUEST, "Quantity out of range");
+
 
         if(dto.getDescription() == null || dto.getDescription().isBlank())
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Product's description cannot be empty"
-            );
+            throw new ResponseStatusException(BAD_REQUEST, "Product's description cannot be empty");
+
+        if(dto.getDescription().length() > 500)
+            throw new ResponseStatusException(BAD_REQUEST, "Description is too long");
+
 
         if(dto.getCategory() == null)
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Product's category cannot be empty"
-            );
+            throw new ResponseStatusException(BAD_REQUEST, "Product's category cannot be empty");
+
+        // validate for invalid category
+        try {
+            ProductEntity.Category.valueOf(dto.getCategory().toString());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(BAD_REQUEST, "Invalid category");
+        }
+
 
         if(dto.getImgBase64() == null || dto.getImgBase64().isBlank())
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Image cannot be blank"
-            );
+            throw new ResponseStatusException(BAD_REQUEST, "Image cannot be blank");
 
     }
 

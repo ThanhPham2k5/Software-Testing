@@ -41,7 +41,12 @@ function CreateBook({ checkCreate, onAdd }) {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/products`,
-        newProduct
+        newProduct,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
       );
       onAdd(response.data);
       alert("Success add new book");

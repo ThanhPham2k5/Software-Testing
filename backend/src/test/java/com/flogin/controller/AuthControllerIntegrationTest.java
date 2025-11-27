@@ -1,6 +1,7 @@
 package com.flogin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flogin.SecurityConfig;
 import com.flogin.dto.LoginRequestDTO;
 import com.flogin.dto.LoginResponseDTO;
 import com.flogin.service.AuthService;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
+@Import(SecurityConfig.class)
 @DisplayName("Login API Integration Tests")
 class AuthControllerIntegrationTest {
 
@@ -45,6 +48,11 @@ class AuthControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(request))
                         .header("Origin", "http://localhost:5173"))
                 .andExpect(status().isOk()) // Mong đợi HTTP 200
+                // Content Security Policy header
+                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
+                // X-Frame-Options header
+                .andExpect(header().string("X-Frame-Options", "DENY"))
+                // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173")) //CORS
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$.status").value(true))
@@ -67,6 +75,11 @@ class AuthControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(request))
                         .header("Origin", "http://localhost:5173"))
                 .andExpect(status().isUnauthorized())
+                // Content Security Policy header
+                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
+                // X-Frame-Options header
+                .andExpect(header().string("X-Frame-Options", "DENY"))
+                // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173")) //CORS
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$.status").value(false))
@@ -89,6 +102,11 @@ class AuthControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(request))
                         .header("Origin", "http://localhost:5173"))
                 .andExpect(status().isUnauthorized())
+                // Content Security Policy header
+                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
+                // X-Frame-Options header
+                .andExpect(header().string("X-Frame-Options", "DENY"))
+                // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173")) //CORS
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$.status").value(false))

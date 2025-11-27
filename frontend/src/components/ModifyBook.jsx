@@ -36,7 +36,12 @@ function ModifyBook({ product, checkModify, onSave }) {
     try {
       await axios.put(
         `${import.meta.env.VITE_API_URL}/api/products/${product.id}`,
-        newProduct
+        newProduct,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
       );
       onSave({
         ...newProduct,
