@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
-@Import(SecurityConfig.class) // disable Spring Security filters
+@Import(SecurityConfig.class)
 @DisplayName("Product API Integration Tests")
 class ProductControllerIntegrationTest {
 
@@ -214,5 +214,17 @@ class ProductControllerIntegrationTest {
                 .andExpect(header().string("X-Frame-Options", "DENY"))
                 // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"));
+    }
+
+
+    @Test
+    @DisplayName("Create /api/products/{id}: should fail with incorrect category")
+    void testCreateProductWithInvalidCategory() throws Exception{
+        mockMvc.perform(post("/api/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Book\",\"price\":100,\"quantity\":10,\"description\":\"desc\",\"category\":\"INVALID\",\"imgBase64\":\"data\"}")
+                        .header("Origin", "http://localhost:5173")
+                        .header("Authorization", "Bearer token-123"))
+                .andExpect(status().isBadRequest());
     }
 }

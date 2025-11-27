@@ -72,12 +72,13 @@ public class ProductService {
             throw new ResponseStatusException(BAD_REQUEST, "Invalid name length");
 
 
-
         if(dto.getPrice() <= 0 || dto.getPrice() > 999_999_999)
             throw new ResponseStatusException(BAD_REQUEST, "Price out of range");
 
+
         if(dto.getQuantity() < 0 || dto.getQuantity() > 99_999)
             throw new ResponseStatusException(BAD_REQUEST, "Quantity out of range");
+
 
         if(dto.getDescription() == null || dto.getDescription().isBlank())
             throw new ResponseStatusException(BAD_REQUEST, "Product's description cannot be empty");
@@ -85,8 +86,17 @@ public class ProductService {
         if(dto.getDescription().length() > 500)
             throw new ResponseStatusException(BAD_REQUEST, "Description is too long");
 
+
         if(dto.getCategory() == null)
             throw new ResponseStatusException(BAD_REQUEST, "Product's category cannot be empty");
+
+        // validate for invalid category
+        try {
+            ProductEntity.Category.valueOf(dto.getCategory().toString());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(BAD_REQUEST, "Invalid category");
+        }
+
 
         if(dto.getImgBase64() == null || dto.getImgBase64().isBlank())
             throw new ResponseStatusException(BAD_REQUEST, "Image cannot be blank");
