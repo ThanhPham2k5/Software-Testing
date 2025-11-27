@@ -6,6 +6,7 @@ import com.flogin.dto.LoginRequestDTO;
 import com.flogin.dto.LoginResponseDTO;
 import com.flogin.entity.AccountEntity;
 import com.flogin.repository.AccountRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,11 +16,13 @@ public class AuthService {
     private final XssSanitizer sanitizer;
     private final JwtUtil jwtUtil;
     private final AccountRepository repository;
+    private BCryptPasswordEncoder passwordEncoder;
 
-    public AuthService(AccountRepository repository, XssSanitizer sanitizer, JwtUtil jwtUtil){
+    public AuthService(AccountRepository repository, XssSanitizer sanitizer, JwtUtil jwtUtil, BCryptPasswordEncoder passwordEncoder){
         this.jwtUtil = jwtUtil;
         this.sanitizer = sanitizer;
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public LoginResponseDTO login(LoginRequestDTO request){
@@ -34,7 +37,7 @@ public class AuthService {
         }
 
         AccountEntity foundAccount = account.get();
-        boolean match = (request.getPassword()).equals(foundAccount.getPassword());
+        boolean match = passwordEncoder.matches(request.getPassword(), foundAccount.getPassword());
         if(!match){
             return new LoginResponseDTO(false,"Password is incorrect",null);
         }
