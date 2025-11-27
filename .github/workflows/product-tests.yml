@@ -52,7 +52,7 @@ jobs:
         run: |
           cd backend
           chmod +x mvnw
-          ./mvnw clean test -Dtest=ProductServiceTest
+          ./mvnw clean test -Dtest=ProductServiceTest,ProductServiceMockTest,ProductControllerIntegrationTest
         continue-on-error: true
 
       - name: Archive Frontend Test Reports
