@@ -7,6 +7,8 @@ import Dashboard from "./Dashboard";
 vi.mock("axios");
 
 describe("Test Dashboard", () => {
+  const mockToken = "mock-token-123";
+  localStorage.setItem("accessToken", mockToken);
   const mockSetToken = vi.fn();
 
   const mockApiProducts = [
@@ -38,7 +40,12 @@ describe("Test Dashboard", () => {
 
     expect(axios.get).toHaveBeenCalledWith(
       expect.stringContaining("/api/products"),
-      expect.objectContaining({ params: { page: 0, size: 1000 } })
+      expect.objectContaining({
+        params: { page: 0, size: 1000 },
+        headers: expect.objectContaining({
+          Authorization: `Bearer ${mockToken}`,
+        }),
+      })
     );
   });
 });

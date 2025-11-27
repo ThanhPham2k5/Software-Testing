@@ -100,6 +100,8 @@ describe("Test user interactions", () => {
   });
 
   it("Test delete button", async () => {
+    const mockToken = "mock-token-123";
+    localStorage.setItem("accessToken", mockToken);
     const product = {
       id: 1,
       name: "Dac nhan tam",
@@ -126,7 +128,15 @@ describe("Test user interactions", () => {
     await user.click(deleteButton);
 
     expect(axios.delete).toBeCalledWith(
-      `http://localhost:8080/api/products/${product.id}`
+      expect.stringContaining(
+        `http://localhost:8080/api/products/${product.id}`
+      ),
+
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: `Bearer ${mockToken}`,
+        }),
+      })
     );
     expect(onDelete).toHaveBeenCalled();
   });

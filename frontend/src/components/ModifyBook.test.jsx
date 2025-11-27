@@ -75,6 +75,8 @@ describe("Test ModifyBook component", () => {
   });
 
   it("Test sua thong tin thanh cong", async () => {
+    const mockToken = "mock-token-123";
+    localStorage.setItem("accessToken", mockToken);
     const user = userEvent.setup();
 
     const apiResponse = { data: { ...mockProduct, name: "New Name" } };
@@ -107,6 +109,11 @@ describe("Test ModifyBook component", () => {
         quantity: 10,
         category: "COMIC",
         imgBase64: "oldImageBase64",
+      }),
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: `Bearer ${mockToken}`,
+        }),
       })
     );
 
@@ -123,6 +130,8 @@ describe("Test ModifyBook component", () => {
   });
 
   it("Test sua anh thanh cong", async () => {
+    const mockToken = "mock-token-123";
+    localStorage.setItem("accessToken", mockToken);
     const user = userEvent.setup();
     const originalFileReader = window.FileReader;
     window.FileReader = class {
@@ -154,6 +163,11 @@ describe("Test ModifyBook component", () => {
       expect.any(String),
       expect.objectContaining({
         imgBase64: "NewImageBase64",
+      }),
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: `Bearer ${mockToken}`,
+        }),
       })
     );
 
