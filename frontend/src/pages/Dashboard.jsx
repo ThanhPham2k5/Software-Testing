@@ -110,14 +110,14 @@ function Dashboard({ setToken }) {
   return (
     <>
       <div className="dashboard">
-        <div className="Header">
+        <div className="Header" data-testid="Header">
           <Link to={"/"} className="Brand">
             <img src="/logo.svg" alt="logo" className="logo-img" />
 
             <div className="brand-name">gin</div>
           </Link>
 
-          <div className="search-bar">
+          <div className="search-bar" data-testid="search-bar">
             <img
               src="/search-bar-ico.svg"
               alt="search-bar-ico"
@@ -144,7 +144,7 @@ function Dashboard({ setToken }) {
             </div>
           </div>
 
-          <div className="user" ref={userRef}>
+          <div className="user" ref={userRef} data-testid="user">
             <img
               src="/user-img-default.svg"
               alt="user-img-default"
@@ -182,7 +182,7 @@ function Dashboard({ setToken }) {
             <div className="filters-name">Filters</div>
 
             <div className="filters-body">
-              <div className="category">
+              <div className="category" data-testid="category">
                 <div className="category-title" onClick={() => categoryClick()}>
                   <div className="category-name">Categories</div>
 
@@ -285,7 +285,7 @@ function Dashboard({ setToken }) {
                 ) : null}
               </div>
 
-              <div className="price">
+              <div className="price" data-testid="price">
                 <div className="price-title" onClick={() => priceClick()}>
                   <div className="price-name">Price</div>
 
@@ -370,7 +370,7 @@ function Dashboard({ setToken }) {
             </div>
           </div>
 
-          <div className="content">
+          <div className="content" data-testid="content">
             <ProductForm
               products={processedProducts}
               setProducts={setProducts}
