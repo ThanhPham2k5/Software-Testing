@@ -6,7 +6,12 @@ function DetailBook({ product, checkShow, checkModify, onDelete }) {
 
   async function deleteButton() {
     await axios.delete(
-      `${import.meta.env.VITE_API_URL}/api/products/${product.id}`
+      `${import.meta.env.VITE_API_URL}/api/products/${product.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
     );
 
     onDelete(product.id);

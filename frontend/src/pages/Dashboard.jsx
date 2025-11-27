@@ -31,6 +31,9 @@ function Dashboard({ setToken }) {
               page: 0,
               size: 1000,
             },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
           }
         );
         setProducts(response.data.content);
