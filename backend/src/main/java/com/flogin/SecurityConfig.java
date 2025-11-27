@@ -14,10 +14,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .anyRequest().permitAll()
+
+                )
                 .headers(headers -> headers
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
-                        .contentSecurityPolicy(policy -> policy.policyDirectives("default-src 'self'")));
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                        .contentSecurityPolicy(policy -> policy.policyDirectives("default-src 'self' 'unsafe-inline'"))
+                )
+                .httpBasic(AbstractHttpConfigurer::disable);
         return http.build();
     }
 }
