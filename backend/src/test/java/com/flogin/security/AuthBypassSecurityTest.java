@@ -22,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -66,7 +67,7 @@ public class AuthBypassSecurityTest {
     }
 
     @Test
-    @DisplayName("Should be rejected with a invalid token")
+    @DisplayName("Should be rejected with an invalid token")
     void testCreateProductInvalidToken() throws Exception {
         when(jwtUtil.validateToken("Bearer invalid-token"))
                 .thenThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired token"));
