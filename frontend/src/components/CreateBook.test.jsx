@@ -69,7 +69,9 @@ describe("Test CreateBook component", () => {
     await user.type(screen.getByTestId("input-description"), "Manga hay");
     await user.selectOptions(screen.getByTestId("select-category"), "MANGA");
 
-    const file = new File(["(⌐□_□)"], "chucknorris.png", { type: "image/png" });
+    const file = new File(["testImg"], "chucknorris.png", {
+      type: "image/png",
+    });
     const inputImage = screen.getByTestId("image-input");
     const originalFileReader = window.FileReader;
     window.FileReader = class {

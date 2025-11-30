@@ -14,11 +14,8 @@ describe("Test username qua ngan hoac qua dai", () => {
   });
 
   it("username dai", () => {
-    expect(
-      validateUsername(
-        "abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcde"
-      )
-    ).toBe("Username is too long.");
+    const test = "a".repeat(51);
+    expect(validateUsername(test)).toBe("Username is too long.");
   });
 });
 

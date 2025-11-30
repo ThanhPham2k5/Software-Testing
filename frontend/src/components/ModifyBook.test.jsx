@@ -29,7 +29,6 @@ describe("Test ModifyBook component", () => {
     window.alert = vi.fn();
     validateProduct.mockReturnValue({});
   });
-
   it("Test render", () => {
     render(
       <ModifyBook
@@ -57,7 +56,6 @@ describe("Test ModifyBook component", () => {
       `data:image/jpeg;base64,${mockProduct.imgBase64}`
     );
   });
-
   it("Test nut return", async () => {
     const user = userEvent.setup();
     render(
@@ -73,7 +71,6 @@ describe("Test ModifyBook component", () => {
 
     expect(mockCheckModify).toHaveBeenCalledWith(false);
   });
-
   it("Test sua thong tin thanh cong", async () => {
     const mockToken = "mock-token-123";
     localStorage.setItem("accessToken", mockToken);
@@ -128,7 +125,6 @@ describe("Test ModifyBook component", () => {
     expect(window.alert).toHaveBeenCalledWith("Success modify book");
     expect(mockCheckModify).toHaveBeenCalledWith(false);
   });
-
   it("Test sua anh thanh cong", async () => {
     const mockToken = "mock-token-123";
     localStorage.setItem("accessToken", mockToken);
@@ -173,7 +169,6 @@ describe("Test ModifyBook component", () => {
 
     window.FileReader = originalFileReader;
   });
-
   it("Hien thi loi khi nhap ten sach rong", async () => {
     const user = userEvent.setup();
     render(

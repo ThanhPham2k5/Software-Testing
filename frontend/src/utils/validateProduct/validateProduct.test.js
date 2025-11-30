@@ -107,7 +107,7 @@ describe("Product Validation Tests", () => {
     });
   });
 
-  it("Test product category invalid", () => {
+  it("Test product category khong hop le", () => {
     const product = {
       name: "Dac nhan tam",
       price: 10000,

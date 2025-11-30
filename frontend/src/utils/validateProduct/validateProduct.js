@@ -20,7 +20,10 @@ export function validateProduct(product) {
     errors.price = "Product price must be between 0-999,999,999 characters";
   }
 
-  const desc = product.description ? product.description.trim() : "";
+  if (!product.description || product.description.trim() === "") {
+    errors.description = "Description cannot be empty";
+  }
+  const desc = product.description.trim();
   if (desc.length > 500) {
     errors.description = "Product description cannot exceed 500 characters";
   }
