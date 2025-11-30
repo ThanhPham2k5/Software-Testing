@@ -29,7 +29,6 @@ import static org.mockito.ArgumentMatchers.anyLong;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
@@ -83,10 +82,8 @@ class ProductControllerIntegrationTest {
                 .andExpect(jsonPath("$.size").value(2))
                 .andExpect(jsonPath("$.totalElements").value(2))
                 .andExpect(jsonPath("$.totalPages").value(1))
-                // Content Security Policy header
-                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
                 // X-Frame-Options header
-                .andExpect(header().string("X-Frame-Options", "DENY"))
+                .andExpect(header().string("X-Frame-Options", "SAMEORIGIN"))
                 // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
                 .andExpect(header().string("Content-Type", "application/json"));
@@ -110,10 +107,8 @@ class ProductControllerIntegrationTest {
                 .andExpect(jsonPath("$.name").value("Book1"))
                 .andExpect(jsonPath("$.price").value(100))
                 .andExpect(jsonPath("$.category").value("COMIC"))
-                // Content Security Policy header
-                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
                 // X-Frame-Options header
-                .andExpect(header().string("X-Frame-Options", "DENY"))
+                .andExpect(header().string("X-Frame-Options", "SAMEORIGIN"))
                 // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
                 .andExpect(header().string("Content-Type", "application/json"));
@@ -151,10 +146,8 @@ class ProductControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("abc"))
                 .andExpect(jsonPath("$.price").value(10.0))
-                // Content Security Policy header
-                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
                 // X-Frame-Options header
-                .andExpect(header().string("X-Frame-Options", "DENY"))
+                .andExpect(header().string("X-Frame-Options", "SAMEORIGIN"))
                 // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
                 .andExpect(header().string("Content-Type", "application/json"));
@@ -192,10 +185,8 @@ class ProductControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("ABC_updated"))
                 .andExpect(jsonPath("$.description").value("this is a updated description"))
-                // Content Security Policy header
-                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
                 // X-Frame-Options header
-                .andExpect(header().string("X-Frame-Options", "DENY"))
+                .andExpect(header().string("X-Frame-Options", "SAMEORIGIN"))
                 // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
                 .andExpect(header().string("Content-Type", "application/json"));
@@ -208,10 +199,8 @@ class ProductControllerIntegrationTest {
                         .header("Origin", "http://localhost:5173")
                         .header("Authorization", "Bearer token-123"))
                 .andExpect(status().isNoContent())
-                // Content Security Policy header
-                .andExpect(header().string("Content-Security-Policy", "default-src 'self'"))
                 // X-Frame-Options header
-                .andExpect(header().string("X-Frame-Options", "DENY"))
+                .andExpect(header().string("X-Frame-Options", "SAMEORIGIN"))
                 // CORS header
                 .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"));
     }

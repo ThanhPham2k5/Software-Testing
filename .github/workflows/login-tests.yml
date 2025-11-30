@@ -47,7 +47,7 @@ jobs:
         run: |
           cd backend
           chmod +x mvnw
-          ./mvnw clean test -Dtest=AuthControllerIntegrationTest,AuthControllerMockedTest,AuthServiceTest
+          ./mvnw clean test -Dtest=AuthControllerIntegrationTest,AuthControllerMockTest,AuthServiceTest
         continue-on-error: true
 
       - name: Archive Frontend Test Reports

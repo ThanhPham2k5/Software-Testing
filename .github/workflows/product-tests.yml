@@ -32,6 +32,11 @@ jobs:
             src/utils/validateProduct/validateProduct.test.js \
             src/components/ProductList.test.jsx \
             src/components/DetailBook.test.jsx \
+            src/components/CreateBook.test.jsx \
+            src/components/ModifyBook.test.jsx \
+            src/components/Product.test.jsx \
+            src/components/ProductForm.test.jsx \
+            src/pages/Dashboard.test.jsx \
             --reporter=junit \
             --outputFile=test-results/report.xml
         continue-on-error: true
@@ -47,7 +52,7 @@ jobs:
         run: |
           cd backend
           chmod +x mvnw
-          ./mvnw clean test -Dtest=ProductServiceTest
+          ./mvnw clean test -Dtest=ProductServiceTest,ProductServiceMockTest,ProductControllerIntegrationTest
         continue-on-error: true
 
       - name: Archive Frontend Test Reports

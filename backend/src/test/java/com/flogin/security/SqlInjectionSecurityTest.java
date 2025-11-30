@@ -40,6 +40,6 @@ public class SqlInjectionSecurityTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.status").value(false))
-                .andExpect(jsonPath("$.token").doesNotExist());;
+                .andExpect(jsonPath("$.token").doesNotExist());
     }
 }

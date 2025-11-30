@@ -8,7 +8,6 @@ describe("Product E2E Tests", () => {
     LoginPage.fillUser("admin");
     LoginPage.fillPassword("@Admin123");
     LoginPage.clickLogin();
-    // ProductPage.visit();
   });
 
   it("Should Create product successfully", () => {
